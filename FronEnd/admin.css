@@ -12,7 +12,7 @@ form {
 .form-group label {
     margin-bottom: 5px;
     font-weight: bold;
-    cursor: pointer;
+    cursor: pointer; /* <-- CORREÇÃO: Indica que o label é clicável */
 }
 
 input[type="text"],
@@ -28,7 +28,7 @@ textarea {
 
 button {
     padding: 12px;
-    background-color: #008000;
+    background-color: #ffc107;
     color: #212529; 
     border: none;
     border-radius: 4px;
@@ -45,33 +45,10 @@ button:hover {
 #mensagem-status {
     margin-top: 15px;
     font-weight: bold;
-    padding: 10px;
-    border-radius: 4px;
-    display: none;
 }
-
-
-#mensagem-status.sucesso {
-    color: white;
-    background-color: #28a745;
-    display: block;
-}
-
-#mensagem-status.erro {
-    color: white;
-    background-color: #dc3545; 
-    display: block;
-}
-
-#mensagem-status.info {
-    color: white;
-    background-color: #0056b3;
-    display: block;
-}
-
 
 #info-horario-fim {
     font-style: italic;
-    color: black;
+    color: #555;
     margin-top: 5px;
 }
