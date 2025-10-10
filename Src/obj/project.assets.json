@@ -3843,11 +3843,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\SiteQuadra\\SiteQuadra.csproj",
+      "projectUniqueName": "C:\\SiteQuadra\\src\\SiteQuadra.csproj",
       "projectName": "SiteQuadra",
-      "projectPath": "C:\\SiteQuadra\\SiteQuadra.csproj",
+      "projectPath": "C:\\SiteQuadra\\src\\SiteQuadra.csproj",
       "packagesPath": "C:\\Users\\rikel\\.nuget\\packages\\",
-      "outputPath": "C:\\SiteQuadra\\obj\\",
+      "outputPath": "C:\\SiteQuadra\\src\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rikel\\AppData\\Roaming\\NuGet\\NuGet.Config",

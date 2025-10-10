@@ -36,6 +36,38 @@ public class AgendamentosController : ControllerBase
 
         return CreatedAtAction(nameof(GetAgendamentos), new { id = agendamento.Id }, agendamento);
     }
+    
+    // NOVO MÉTODO ABAIXO
+    // PUT: api/agendamentos/5
+    // Rota para atualizar um agendamento existente
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutAgendamento(int id, Agendamento agendamento)
+    {
+        if (id != agendamento.Id)
+        {
+            return BadRequest(); // Retorna erro se o ID da URL for diferente do ID do objeto
+        }
+
+        _context.Entry(agendamento).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Agendamentos.Any(e => e.Id == id))
+            {
+                return NotFound(); // Retorna erro se o agendamento não existir mais
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return NoContent(); // Retorna sucesso sem conteúdo
+    }
 
     // DELETE: api/agendamentos/5
     // Rota para deletar um agendamento específico pelo ID
