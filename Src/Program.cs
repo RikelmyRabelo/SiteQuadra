@@ -3,7 +3,6 @@ using SiteQuadra.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona serviços ao contêiner.
 
 // Adiciona a configuração do DbContext para usar o SQLite
 builder.Services.AddDbContext<QuadraContext>(options => 
@@ -12,6 +11,19 @@ builder.Services.AddDbContext<QuadraContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 
 var app = builder.Build();
 
@@ -23,6 +35,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// CORS AQUI
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
 

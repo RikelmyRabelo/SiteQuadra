@@ -37,7 +37,6 @@ public class AgendamentosController : ControllerBase
         return CreatedAtAction(nameof(GetAgendamentos), new { id = agendamento.Id }, agendamento);
     }
     
-    // NOVO MÉTODO ABAIXO
     // PUT: api/agendamentos/5
     // Rota para atualizar um agendamento existente
     [HttpPut("{id}")]
