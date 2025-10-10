@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteQuadra.Data;
 
@@ -10,9 +11,11 @@ using SiteQuadra.Data;
 namespace SiteQuadra.Migrations
 {
     [DbContext(typeof(QuadraContext))]
-    partial class QuadraContextModelSnapshot : ModelSnapshot
+    [Migration("20251010220852_AddColorToAgendamento")]
+    partial class AddColorToAgendamento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -23,6 +26,10 @@ namespace SiteQuadra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Cor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DataHoraFim")
                         .HasColumnType("TEXT");
 
@@ -31,6 +38,9 @@ namespace SiteQuadra.Migrations
 
                     b.Property<string>("NomeResponsavel")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

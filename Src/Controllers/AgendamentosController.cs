@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SiteQuadra.Controllers;
 
@@ -18,34 +16,33 @@ public class AgendamentosController : ControllerBase
         _context = context;
     }
 
-    // GET: api/agendamentos
-    // Rota para buscar todos os agendamentos
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Agendamento>>> GetAgendamentos()
     {
         return await _context.Agendamentos.ToListAsync();
     }
 
-    // POST: api/agendamentos
-    // Rota para criar um novo agendamento
     [HttpPost]
     public async Task<ActionResult<Agendamento>> PostAgendamento(Agendamento agendamento)
     {
+        // Ignora a data final enviada pelo usuário e calcula a correta.
+        agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+
         _context.Agendamentos.Add(agendamento);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetAgendamentos), new { id = agendamento.Id }, agendamento);
     }
     
-    // PUT: api/agendamentos/5
-    // Rota para atualizar um agendamento existente
     [HttpPut("{id}")]
     public async Task<IActionResult> PutAgendamento(int id, Agendamento agendamento)
     {
         if (id != agendamento.Id)
         {
-            return BadRequest(); // Retorna erro se o ID da URL for diferente do ID do objeto
+            return BadRequest();
         }
+
+        agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
 
         _context.Entry(agendamento).State = EntityState.Modified;
 
@@ -57,7 +54,7 @@ public class AgendamentosController : ControllerBase
         {
             if (!_context.Agendamentos.Any(e => e.Id == id))
             {
-                return NotFound(); // Retorna erro se o agendamento não existir mais
+                return NotFound();
             }
             else
             {
@@ -65,11 +62,9 @@ public class AgendamentosController : ControllerBase
             }
         }
 
-        return NoContent(); // Retorna sucesso sem conteúdo
+        return NoContent();
     }
 
-    // DELETE: api/agendamentos/5
-    // Rota para deletar um agendamento específico pelo ID
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAgendamento(int id)
     {

@@ -1,0 +1,77 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px;
+    background-color: #008000;
+    color: #212529; 
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #e0a800;
+}
+
+#mensagem-status {
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+
+#mensagem-status.sucesso {
+    color: white;
+    background-color: #28a745;
+    display: block;
+}
+
+#mensagem-status.erro {
+    color: white;
+    background-color: #dc3545; 
+    display: block;
+}
+
+#mensagem-status.info {
+    color: white;
+    background-color: #0056b3;
+    display: block;
+}
+
+
+#info-horario-fim {
+    font-style: italic;
+    color: black;
+    margin-top: 5px;
+}
