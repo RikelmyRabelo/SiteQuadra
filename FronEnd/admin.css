@@ -12,7 +12,7 @@ form {
 .form-group label {
     margin-bottom: 5px;
     font-weight: bold;
-    cursor: pointer; /* <-- CORREÇÃO: Indica que o label é clicável */
+    cursor: pointer; 
 }
 
 input[type="text"],
@@ -28,8 +28,8 @@ textarea {
 
 button {
     padding: 12px;
-    background-color: #ffc107;
-    color: #212529; 
+    background-color: #006400;
+    color: white;
     border: none;
     border-radius: 4px;
     font-size: 16px;
@@ -39,7 +39,7 @@ button {
 }
 
 button:hover {
-    background-color: #e0a800;
+    background-color: #5a6268;
 }
 
 #mensagem-status {

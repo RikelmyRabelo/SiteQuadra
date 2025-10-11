@@ -6,36 +6,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const infoHorarioFim = document.getElementById('info-horario-fim');
     const statusMensagem = document.getElementById('mensagem-status');
 
-    // --- CORREÇÃO: Restaurando o clique nos labels ---
-    // Pega os elementos 'pai' dos inputs de data e hora
-    const dateGroup = dataInput.parentElement;
-    const timeGroup = horaInput.parentElement;
 
-    // Adiciona um evento de clique para o grupo da data
-    dateGroup.addEventListener('click', function() {
-        dataInput.showPicker(); // Força a abertura do seletor de data
+    // Adiciona um listener no 'pai' do input de data
+    const dateGroup = dataInput.parentElement;
+    dateGroup.addEventListener('click', function(e) {
+        // Evita que o clique no input dispare o evento duas vezes
+        if (e.target !== dataInput) {
+            dataInput.showPicker();
+        }
     });
 
     // Adiciona um evento de clique para o grupo da hora
-    timeGroup.addEventListener('click', function() {
-        horaInput.showPicker(); // Força a abertura do seletor de hora
+    const timeGroup = horaInput.parentElement;
+    timeGroup.addEventListener('click', function(e) {
+        // Evita que o clique no input dispare o evento duas vezes
+        if (e.target !== horaInput) {
+            horaInput.showPicker();
+        }
     });
     
     // Função para atualizar o horário de término
     function atualizarInfoHorario() {
         const horaValue = horaInput.value;
         if (horaValue) {
-            const hora = parseInt(horaValue.split(':')[0]);
-            const horaFim = (hora + 1) % 24;
-            const horaFimFormatada = horaFim.toString().padStart(2, '0') + ':00';
+            const [hora, minuto] = horaValue.split(':');
+            const dataInicio = new Date();
+            dataInicio.setHours(parseInt(hora), parseInt(minuto));
+            
+            dataInicio.setHours(dataInicio.getHours() + 1);
+
+            const horaFimFormatada = dataInicio.getHours().toString().padStart(2, '0') + ':' + dataInicio.getMinutes().toString().padStart(2, '0');
             infoHorarioFim.textContent = `O jogo poderá ser jogado até as ${horaFimFormatada}.`;
         } else {
             infoHorarioFim.textContent = '';
         }
     }
-
-    // Chama a função no início para mostrar o horário do valor padrão "08:00"
-    atualizarInfoHorario(); 
     
     horaInput.addEventListener('change', atualizarInfoHorario);
 
@@ -46,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const data = dataInput.value;
         const hora = horaInput.value;
 
-        // Validação da Hora (não pode ser maior que 23)
         const horaSelecionada = parseInt(hora.split(':')[0]);
         if (horaSelecionada > 23) {
             statusMensagem.textContent = 'A hora de início não pode ser maior que 23.';
@@ -76,8 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusMensagem.textContent = 'Agendamento salvo com sucesso!';
                 statusMensagem.style.color = 'green';
                 form.reset();
-                horaInput.value = '08:00';
-                atualizarInfoHorario();
+                infoHorarioFim.textContent = '';
             } else {
                 statusMensagem.textContent = 'Falha ao salvar. Verifique o console (F12).';
                 statusMensagem.style.color = 'red'; 
