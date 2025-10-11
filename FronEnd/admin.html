@@ -22,12 +22,12 @@
 
             <div class="form-group">
                 <label for="data">Data do Jogo:</label>
-                <input type="date" id="data" required>
+                <input type="date" id="data" max="2999-12-31" required>
             </div>
 
             <div class="form-group">
                 <label for="hora">Hora de Início:</label>
-                <input type="time" id="hora" required>
+                <input type="time" id="hora" min="08:00" max="21:00" required>
                 <p id="info-horario-fim"></p> 
             </div>
 

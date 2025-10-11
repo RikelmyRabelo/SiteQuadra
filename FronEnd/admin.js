@@ -6,23 +6,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const infoHorarioFim = document.getElementById('info-horario-fim');
     const statusMensagem = document.getElementById('mensagem-status');
 
+    // --- NOVO BLOCO: Impede a seleção de datas passadas ---
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda se necessário
+    const dia = String(hoje.getDate()).padStart(2, '0'); // Adiciona um zero à esquerda se necessário
+    
+    // Formata a data para "AAAA-MM-DD", que é o formato que o input aceita
+    const dataMinima = `${ano}-${mes}-${dia}`;
+    
+    // Define o atributo 'min' no campo de data
+    dataInput.setAttribute('min', dataMinima);
+    // --- FIM DO NOVO BLOCO ---
 
-    // Adiciona um listener no 'pai' do input de data
-    const dateGroup = dataInput.parentElement;
-    dateGroup.addEventListener('click', function(e) {
-        // Evita que o clique no input dispare o evento duas vezes
-        if (e.target !== dataInput) {
-            dataInput.showPicker();
-        }
+
+    // Funcionalidade de clique nos labels
+    dataInput.parentElement.addEventListener('click', function(e) {
+        if (e.target !== dataInput) dataInput.showPicker();
     });
-
-    // Adiciona um evento de clique para o grupo da hora
-    const timeGroup = horaInput.parentElement;
-    timeGroup.addEventListener('click', function(e) {
-        // Evita que o clique no input dispare o evento duas vezes
-        if (e.target !== horaInput) {
-            horaInput.showPicker();
-        }
+    horaInput.parentElement.addEventListener('click', function(e) {
+        if (e.target !== horaInput) horaInput.showPicker();
     });
     
     // Função para atualizar o horário de término
@@ -32,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const [hora, minuto] = horaValue.split(':');
             const dataInicio = new Date();
             dataInicio.setHours(parseInt(hora), parseInt(minuto));
-            
             dataInicio.setHours(dataInicio.getHours() + 1);
 
             const horaFimFormatada = dataInicio.getHours().toString().padStart(2, '0') + ':' + dataInicio.getMinutes().toString().padStart(2, '0');
@@ -50,14 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const nome = document.getElementById('nome').value;
         const data = dataInput.value;
         const hora = horaInput.value;
-
-        const horaSelecionada = parseInt(hora.split(':')[0]);
-        if (horaSelecionada > 23) {
-            statusMensagem.textContent = 'A hora de início não pode ser maior que 23.';
-            statusMensagem.style.color = 'red';
-            return;
-        }
-
+        
         const dataHoraInicio = `${data}T${hora}`;
 
         const agendamento = {
