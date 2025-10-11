@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
+using System.Linq; 
 
 namespace SiteQuadra.Controllers;
 
@@ -25,8 +26,19 @@ public class AgendamentosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Agendamento>> PostAgendamento(Agendamento agendamento)
     {
-        // Ignora a data final enviada pelo usuário e calcula a correta.
+        // Regra de negócio: Duração de 1 hora
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+
+        var haConflito = await _context.Agendamentos
+            .AnyAsync(a => 
+                (agendamento.DataHoraInicio < a.DataHoraFim) && (agendamento.DataHoraFim > a.DataHoraInicio)
+            );
+
+        if (haConflito)
+        {
+            // Retorna um erro específico (409 Conflict) se o horário já estiver ocupado.
+            return Conflict("Este horário já está reservado.");
+        }
 
         _context.Agendamentos.Add(agendamento);
         await _context.SaveChangesAsync();
@@ -41,8 +53,9 @@ public class AgendamentosController : ControllerBase
         {
             return BadRequest();
         }
-
+        
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+
 
         _context.Entry(agendamento).State = EntityState.Modified;
 
