@@ -8,16 +8,45 @@ document.addEventListener('DOMContentLoaded', function() {
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: 'changeViewButton'
+        },
+        
+        customButtons: {
+            changeViewButton: {
+                click: function() {
+                    if (calendar.view.type === 'dayGridMonth') {
+                        calendar.changeView('timeGridDay');
+                    } else {
+                        calendar.changeView('dayGridMonth');
+                    }
+                }
+            }
+        },
+
+        viewDidMount: function(info) {
+            const button = document.querySelector('.fc-changeViewButton-button');
+            if (info.view.type === 'dayGridMonth') {
+                button.textContent = 'dia';
+            } else {
+                button.textContent = 'mês';
+            }
         },
         
         buttonText: {
             today: 'hoje',
-            month: 'mês',
-            week: 'semana',
-            day: 'dia'
         },
         
+        allDaySlot: false, // Remove a linha "dia todo" da visualização de dia
+
+        slotLabelFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            template: function(info) {
+                return `${info.text} horas`;
+            }
+        },
+
         nowIndicator: true,
 
         displayEventTime: true,
@@ -32,6 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 end: eventData.dataHoraFim,
                 color: eventData.cor || '#3788d8'
             };
+        },
+
+        dateClick: function(info) {
+            calendar.changeView('timeGridDay', info.dateStr);
         }
     });
 

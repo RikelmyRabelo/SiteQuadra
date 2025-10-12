@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contato: document.getElementById('contato').value,          
             cidadeBairro: document.getElementById('cidade-bairro').value, 
             dataHoraInicio: `${dataInput.value}T${horaInput.value}`,
-            dataHoraFim: dataHoraFimObj.toISOString().slice(0, 16) // Format: YYYY-MM-DDTHH:MM
+            dataHoraFim: dataHoraFimObj.toISOString().slice(0, 16)
         };
 
         try {
