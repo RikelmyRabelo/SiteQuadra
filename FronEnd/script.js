@@ -26,17 +26,21 @@ document.addEventListener('DOMContentLoaded', function() {
         viewDidMount: function(info) {
             const button = document.querySelector('.fc-changeViewButton-button');
             if (info.view.type === 'dayGridMonth') {
-                button.textContent = 'dia';
+                button.textContent = 'Dia';
             } else {
-                button.textContent = 'mês';
+                button.textContent = 'Mês';
             }
         },
         
         buttonText: {
-            today: 'hoje',
+            today: 'Hoje',
         },
         
-        allDaySlot: false, // Remove a linha "dia todo" da visualização de dia
+        allDaySlot: false,
+
+        // Limita os horários visíveis no modo dia
+        slotMinTime: '08:00:00',
+        slotMaxTime: '22:00:00',
 
         slotLabelFormat: {
             hour: '2-digit',
@@ -65,6 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         dateClick: function(info) {
             calendar.changeView('timeGridDay', info.dateStr);
+        },
+
+        eventClick: function(info) {
+            calendar.changeView('timeGridDay', info.event.start);
         }
     });
 

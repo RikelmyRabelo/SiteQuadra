@@ -8,5 +8,5 @@ public class Agendamento
     public string CidadeBairro { get; set; } = string.Empty;    
     public DateTime DataHoraInicio { get; set; }
     public DateTime DataHoraFim { get; set; }
-    public string Cor { get; set; } = "#3788d8"; // Cor padrão azul
+    public string Cor { get; set; } = "#3788d8";
 }

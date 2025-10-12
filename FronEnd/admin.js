@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calcula a hora de fim (1 hora depois)
         const [horaInicio, minutoInicio] = horaInput.value.split(':');
         const dataHoraInicioObj = new Date(`${dataInput.value}T${horaInput.value}`);
-        const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000); // +1 hora
+        const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000); 
         
         const agendamento = {
             id: 0,
