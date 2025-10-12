@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataInicio.setHours(horaInt, parseInt(minuto) || 0);
                 dataInicio.setHours(dataInicio.getHours() + 1);
                 const horaFimFormatada = dataInicio.getHours().toString().padStart(2, '0') + ':' + dataInicio.getMinutes().toString().padStart(2, '0');
-                infoHorarioFim.textContent = `O jogo poderá ser jogado até as ${horaFimFormatada}.`;
+                infoHorarioFim.textContent = `Você poderá permanecer na quadra até às ${horaFimFormatada}.`;
             } else {
                 infoHorarioFim.textContent = '';
             }

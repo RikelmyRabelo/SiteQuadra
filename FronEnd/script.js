@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: eventData.nomeResponsavel,
                 start: eventData.dataHoraInicio,
                 end: eventData.dataHoraFim,
-                color: eventData.cor || '#3788d8' // Usa cor do backend ou padrão azul
+                color: eventData.cor || '#3788d8'
             };
         }
     });

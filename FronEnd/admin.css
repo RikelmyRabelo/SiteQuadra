@@ -14,7 +14,8 @@ form {
 }
 input[type="text"],
 input[type="date"],
-input[type="time"] {
+input[type="time"],
+input[type="tel"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
