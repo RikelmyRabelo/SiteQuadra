@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const hora = parseInt(horaSelecionada.split(':')[0]);
         if (hora < 8 || hora > 21) {
             showModal('Horário Inválido', 'O horário de funcionamento da quadra é das 08:00 às 21:00.', 'error');
-            return; // Interrompe a execução
+            return;
         }
         
         showModal('', '', 'loading');
@@ -113,23 +113,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(agendamento),
             });
 
-
-            setTimeout(async () => {
-                if (response.ok) {
-                    showModal('Sucesso!', 'O horário foi agendado com sucesso.', 'success');
-                } else if (response.status === 409) {
-                    const errorMessage = await response.text();
-                    showModal('Erro de Agendamento', errorMessage, 'error');
-                } else {
-                    showModal('Erro Inesperado', 'Ocorreu uma falha ao salvar. Por favor, tente novamente.', 'error');
-                }
-            }, 100);
+            if (response.ok) {
+                showModal('Sucesso!', 'O horário foi agendado com sucesso.', 'success');
+            } else if (response.status === 409) {
+                const errorMessage = await response.text();
+                showModal('Erro de Agendamento', errorMessage, 'error');
+            } else {
+                showModal('Erro Inesperado', 'Ocorreu uma falha ao salvar. Por favor, tente novamente.', 'error');
+            }
 
         } catch (error) {
-            setTimeout(() => {
-                console.error('Erro de conexão:', error);
-                showModal('Erro de Conexão', 'Não foi possível se comunicar com o servidor.', 'error');
-            }, 100);
+            console.error('Erro de conexão:', error);
+            showModal('Erro de Conexão', 'Não foi possível se comunicar com o servidor.', 'error');
         }
     });
 });
