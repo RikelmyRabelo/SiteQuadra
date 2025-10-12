@@ -96,8 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const agendamento = {
             id: 0,
             nomeResponsavel: document.getElementById('nome').value,
-            dataHoraInicio: `${dataInput.value}T${horaSelecionada}`,
-            dataHoraFim: `${dataInput.value}T${horaSelecionada}`
+            contato: document.getElementById('contato').value,           // Novo campo
+            cidadeBairro: document.getElementById('cidade-bairro').value, // Novo campo
+            dataHoraInicio: `${dataInput.value}T${horaInput.value}`,
+            dataHoraFim: `${dataInput.value}T${horaInput.value}`
         };
 
         try {

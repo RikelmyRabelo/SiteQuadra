@@ -4,8 +4,8 @@ public class Agendamento
 {
     public int Id { get; set; }
     public string NomeResponsavel { get; set; } = string.Empty;
-    public string Telefone { get; set; } = string.Empty; // NOVO CAMPO
-    public string Cidade { get; set; } = string.Empty;   // NOVO CAMPO
+    public string Contato { get; set; } = string.Empty;         // Novo campo
+    public string CidadeBairro { get; set; } = string.Empty;    // Novo campo
     public DateTime DataHoraInicio { get; set; }
     public DateTime DataHoraFim { get; set; }
 }

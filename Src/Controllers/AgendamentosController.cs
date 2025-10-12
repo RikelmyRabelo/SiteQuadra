@@ -24,26 +24,27 @@ public class AgendamentosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Agendamento>> PostAgendamento(Agendamento agendamento)
+    public IActionResult Post([FromBody] Agendamento agendamento)
     {
-        // Regra de negócio: Duração de 1 hora
-        agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+        // Busca agendamentos que colidem
+        var existeConflito = _context.Agendamentos.Any(a =>
+            a.DataHoraInicio.Date == agendamento.DataHoraInicio.Date && // Mesmo dia
+            (
+                (agendamento.DataHoraInicio < a.DataHoraFim) && // Início do novo dentro de outro
+                (agendamento.DataHoraFim > a.DataHoraInicio)    // Fim do novo dentro de outro
+            )
+        );
 
-        var haConflito = await _context.Agendamentos
-            .AnyAsync(a => 
-                (agendamento.DataHoraInicio < a.DataHoraFim) && (agendamento.DataHoraFim > a.DataHoraInicio)
-            );
-
-        if (haConflito)
+        if (existeConflito)
         {
-            // Retorna um erro específico (409 Conflict) se o horário já estiver ocupado.
-            return Conflict("Este horário já está reservado.");
+            return Conflict("Já existe um agendamento que colide com este horário.");
         }
 
+        // Salva normalmente
         _context.Agendamentos.Add(agendamento);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetAgendamentos), new { id = agendamento.Id }, agendamento);
+        return Ok(agendamento);
     }
     
     [HttpPut("{id}")]
