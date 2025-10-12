@@ -254,8 +254,8 @@ public class AgendamentosControllerTests : IDisposable
         var okResult = Assert.IsType<OkObjectResult>(result);
         var agendamentoSalvo = Assert.IsType<Agendamento>(okResult.Value);
         
-        // Se cor estiver vazia, deve usar a padrão do modelo
-        Assert.True(!string.IsNullOrEmpty(agendamentoSalvo.Cor));
+        // Se cor estava vazia, o modelo deve ter aplicado a cor padrão
+        Assert.Equal("#3788d8", agendamentoSalvo.Cor);
     }
 
     [Theory]

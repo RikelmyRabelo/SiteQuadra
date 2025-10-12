@@ -29,6 +29,12 @@ public class AgendamentosController : ControllerBase
         // Garante que DataHoraFim seja sempre 1 hora após DataHoraInicio
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
         
+        // Garante cor padrão se estiver vazia
+        if (string.IsNullOrWhiteSpace(agendamento.Cor))
+        {
+            agendamento.Cor = "#3788d8";
+        }
+        
         // Busca agendamentos que colidem
         var existeConflito = _context.Agendamentos.Any(a =>
             a.DataHoraInicio.Date == agendamento.DataHoraInicio.Date && // Mesmo dia
@@ -59,6 +65,12 @@ public class AgendamentosController : ControllerBase
         }
         
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+        
+        // Garante cor padrão se estiver vazia
+        if (string.IsNullOrWhiteSpace(agendamento.Cor))
+        {
+            agendamento.Cor = "#3788d8";
+        }
 
 
         _context.Entry(agendamento).State = EntityState.Modified;

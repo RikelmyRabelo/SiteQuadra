@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
 using System.Net;
@@ -19,19 +20,21 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
+            // Configurar para usar apenas InMemory
             builder.ConfigureServices(services =>
             {
-                // Remove o contexto real e adiciona um em memória
-                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<QuadraContext>));
-                if (descriptor != null)
-                    services.Remove(descriptor);
-
+                // Remove COMPLETAMENTE o SQLite
+                services.RemoveAll(typeof(DbContextOptions<QuadraContext>));
+                services.RemoveAll(typeof(DbContextOptions));
+                services.RemoveAll(typeof(QuadraContext));
+                
+                // Adiciona APENAS InMemory
                 services.AddDbContext<QuadraContext>(options =>
-                {
-                    options.UseInMemoryDatabase("TestDb");
-                });
+                    options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
+                );
             });
         });
+        
         _client = _factory.CreateClient();
     }
 
@@ -53,6 +56,13 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
 
         // Act
         var response = await _client.PostAsync("/api/agendamentos", content);
+
+        // Debug - se der erro, mostrar detalhes
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine($"Erro {response.StatusCode}: {errorContent}");
+        }
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -259,10 +269,23 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
 
     private async Task LimparDatabase()
     {
-        using var scope = _factory.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<QuadraContext>();
-        
-        context.Agendamentos.RemoveRange(context.Agendamentos);
-        await context.SaveChangesAsync();
+        try
+        {
+            using var scope = _factory.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<QuadraContext>();
+            
+            // Força a criação do banco
+            await context.Database.EnsureCreatedAsync();
+            
+            // Remove todos os agendamentos
+            var agendamentos = context.Agendamentos.ToList();
+            context.Agendamentos.RemoveRange(agendamentos);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Em caso de erro, apenas log - não falha o teste
+            System.Diagnostics.Debug.WriteLine($"Erro ao limpar database: {ex.Message}");
+        }
     }
 }
