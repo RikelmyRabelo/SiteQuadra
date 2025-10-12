@@ -40,7 +40,7 @@ button:hover {
     margin-top: 5px;
 }
 
-/* --- ESTILOS DO POP-UP (MODAL) --- */
+/* estilos do modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -48,7 +48,7 @@ button:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* Começa escondido */
+    display: none; 
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -70,19 +70,19 @@ button:hover {
     background-color: #3CB371;
 }
 #modal-close-btn.success {
-    background-color: #28a745; /* Verde para sucesso */
+    background-color: #28a745; 
 }
 
 /* Spinner de Carregamento */
 .loader {
     border: 5px solid #f3f3f3;
-    border-top: 5px solid #28a745; /* Verde */
+    border-top: 5px solid #28a745;
     border-radius: 50%;
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
     margin: 20px auto;
-    display: none; /* Começa escondido */
+    display: none; 
 }
 @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -95,5 +95,5 @@ button:hover {
 .modal-loading #modal-close-btn { display: none; }
 .modal-loading .loader { display: block; }
 
-.modal-success #modal-title { color: #28a745; } /* Verde */
-.modal-error #modal-title { color: #dc3545; } /* Vermelho */
+.modal-success #modal-title { color: #28a745; } 
+.modal-error #modal-title { color: #dc3545; } 

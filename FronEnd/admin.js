@@ -78,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // --- PONTOS 2 e 3: Validações customizadas antes de enviar ---
         const dataSelecionada = dataInput.value;
         const hojeString = new Date().toISOString().split('T')[0];
         if (dataSelecionada < hojeString) {
@@ -109,8 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(agendamento),
             });
 
-            // --- PONTO 1: Correção do pop-up que fecha sozinho ---
-            // Atrasamos a exibição de TODOS os modais de resultado para garantir que permaneçam abertos
             setTimeout(async () => {
                 if (response.ok) {
                     showModal('Sucesso!', 'O horário foi agendado com sucesso.', 'success');
