@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let shouldResetOnClose = false;
 
-    // Funções para controlar o Modal
+    // Funções para controlar o Modal (sem alterações)
     function showModal(title, message, type) {
         modalTitle.textContent = title;
         modalMessage.textContent = message;
@@ -54,11 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Lógica do formulário para limitar a data
+    // Lógica do formulário para limitar a data e preencher via URL
     const hoje = new Date();
-    // Ajuste para zerar as horas, garantindo comparações de data corretas
     hoje.setHours(0, 0, 0, 0); 
-    const diaDaSemana = hoje.getDay(); // Domingo = 0, Sábado = 6
+    const diaDaSemana = hoje.getDay();
     
     const hojeString = hoje.toISOString().split('T')[0];
     dataInput.setAttribute('min', hojeString);
@@ -69,6 +68,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const ultimoDiaSemanaString = ultimoDiaSemana.toISOString().split('T')[0];
     
     dataInput.setAttribute('max', ultimoDiaSemanaString);
+
+    // Preenche a data se ela vier via parâmetro na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataFromUrl = urlParams.get('data');
+    if (dataFromUrl) {
+        // Valida se a data da URL está dentro do intervalo permitido antes de preencher
+        const dataUrlObj = new Date(dataFromUrl + 'T00:00:00');
+        if (dataUrlObj >= hoje && dataUrlObj <= ultimoDiaSemana) {
+            dataInput.value = dataFromUrl;
+        }
+    }
+
 
     dataInput.parentElement.addEventListener('click', (e) => { if (e.target !== dataInput) dataInput.showPicker(); });
     horaInput.parentElement.addEventListener('click', (e) => { if (e.target !== horaInput) horaInput.showPicker(); });
@@ -91,14 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     horaInput.addEventListener('change', atualizarInfoHorario);
 
-    // Lógica de Envio do Formulário
+    // Lógica de Envio do Formulário (com a validação que já tínhamos)
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const dataSelecionada = new Date(dataInput.value + 'T00:00:00');
         if (dataSelecionada > ultimoDiaSemana) {
-            showModal('Data Inválida', 'Não é permitido agendar horários além da semana corrente (Para horários muito no futuro, falar com o responsável da quadra).', 'error');
-            return; // Impede o envio do formulário
+            showModal('Data Inválida', 'Não é permitido agendar horários além da semana corrente (até Sábado).', 'error');
+            return;
         }
 
         const horaSelecionada = horaInput.value;

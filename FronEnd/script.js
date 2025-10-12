@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next today agendarButton',
             center: 'title',
             right: 'changeViewButton'
         },
@@ -20,27 +20,72 @@ document.addEventListener('DOMContentLoaded', function() {
                         calendar.changeView('dayGridMonth');
                     }
                 }
+            },
+            agendarButton: {
+                click: function() {
+                    const hoje = new Date();
+                    const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+                    const ultimoDiaSemana = new Date(hojeSemHoras);
+                    ultimoDiaSemana.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+                    
+                    const dataView = calendar.view.currentStart;
+                    const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
+
+                    if (calendar.view.type === 'dayGridMonth') {
+                        window.location.href = 'admin.html';
+                    } else if (calendar.view.type === 'timeGridDay') {
+                        if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
+                            const dataFormatada = dataAtualDaViewSemHoras.toISOString().split('T')[0];
+                            window.location.href = `admin.html?data=${dataFormatada}`;
+                        } else {
+                            showModal();
+                        }
+                    }
+                }
             }
         },
 
-        viewDidMount: function(info) {
-            const button = document.querySelector('.fc-changeViewButton-button');
-            if (info.view.type === 'dayGridMonth') {
-                button.textContent = 'Dia';
-            } else {
-                button.textContent = 'Mês';
+        datesSet: function(info) {
+            const changeViewButton = document.querySelector('.fc-changeViewButton-button');
+            if (changeViewButton) {
+                changeViewButton.textContent = info.view.type === 'dayGridMonth' ? 'dia' : 'mês';
+            }
+
+            const agendarButton = document.querySelector('.fc-agendarButton-button');
+            if (agendarButton) {
+                agendarButton.style.display = 'inline-block';
+                
+                if (info.view.type === 'dayGridMonth') {
+                    agendarButton.textContent = 'Novo Agendamento';
+                    agendarButton.classList.remove('fc-button-disabled');
+                } else if (info.view.type === 'timeGridDay') {
+                    agendarButton.textContent = 'Agendar neste dia';
+                    
+                    const hoje = new Date();
+                    const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+                    const ultimoDiaSemana = new Date(hojeSemHoras);
+                    ultimoDiaSemana.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+                    const dataView = info.view.currentStart;
+                    const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
+
+                    if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
+                        agendarButton.classList.remove('fc-button-disabled');
+                    } else {
+                        agendarButton.classList.add('fc-button-disabled');
+                    }
+                }
             }
         },
         
         buttonText: {
-            today: 'Hoje',
+            today: 'hoje',
         },
         
         allDaySlot: false,
-
-        // Limita os horários visíveis no modo dia
         slotMinTime: '08:00:00',
         slotMaxTime: '22:00:00',
+        height: 'auto',
+        contentHeight: 'auto',
 
         slotLabelFormat: {
             hour: '2-digit',
@@ -52,9 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         nowIndicator: true,
-
         displayEventTime: true,
-
         events: 'http://localhost:5201/api/agendamentos',
   
         eventDataTransform: function(eventData) {
@@ -77,4 +120,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+});
+
+// Funções do modal
+function showModal() {
+    const modal = document.getElementById('modal-overlay');
+    modal.style.display = 'flex';
+}
+
+function hideModal() {
+    const modal = document.getElementById('modal-overlay');
+    modal.style.display = 'none';
+}
+
+// Event listener para fechar o modal
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('modal-close-btn');
+    const modal = document.getElementById('modal-overlay');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideModal);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+    }
 });
