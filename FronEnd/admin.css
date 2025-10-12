@@ -22,7 +22,7 @@ input[type="time"] {
 }
 button {
     padding: 12px;
-    background-color: #6c757d;
+    background-color: #3CB371;
     color: white;
     border: none;
     border-radius: 4px;
@@ -67,7 +67,10 @@ button:hover {
 }
 #modal-close-btn {
     margin-top: 15px;
-    background-color: #6c757d;
+    background-color: #3CB371;
+}
+#modal-close-btn.success {
+    background-color: #28a745; /* Verde para sucesso */
 }
 
 /* Spinner de Carregamento */
@@ -86,7 +89,8 @@ button:hover {
     100% { transform: rotate(360deg); }
 }
 
-/* Estilos de estado */
+/* Classes de estado para o modal */
+.modal-loading #modal-title { display: none; }
 .modal-loading #modal-message { display: none; }
 .modal-loading #modal-close-btn { display: none; }
 .modal-loading .loader { display: block; }
