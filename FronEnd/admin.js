@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let shouldResetOnClose = false;
 
-    // --- Funções para controlar o Modal ---
+    // Funções para controlar o Modal
     function showModal(title, message, type) {
         modalTitle.textContent = title;
         modalMessage.textContent = message;
@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // --- VALIDAÇÃO DO HORÁRIO FORA DO EXPEDIENTE (CORRIGIDA) ---
         const horaSelecionada = horaInput.value;
         const hora = parseInt(horaSelecionada.split(':')[0]);
         if (hora < 8 || hora > 21) {
@@ -96,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const agendamento = {
             id: 0,
             nomeResponsavel: document.getElementById('nome').value,
-            contato: document.getElementById('contato').value,           // Novo campo
-            cidadeBairro: document.getElementById('cidade-bairro').value, // Novo campo
+            contato: document.getElementById('contato').value,          
+            cidadeBairro: document.getElementById('cidade-bairro').value, 
             dataHoraInicio: `${dataInput.value}T${horaInput.value}`,
             dataHoraFim: `${dataInput.value}T${horaInput.value}`
         };
@@ -109,8 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(agendamento),
             });
 
-            // --- CORREÇÃO DO POP-UP QUE FECHA SOZINHO ---
-            // Atrasamos a exibição de TODOS os modais de resultado para garantir que permaneçam abertos
+
             setTimeout(async () => {
                 if (response.ok) {
                     showModal('Sucesso!', 'O horário foi agendado com sucesso.', 'success');
