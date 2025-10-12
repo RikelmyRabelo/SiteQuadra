@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
-using System.Linq; 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SiteQuadra.Controllers;
 
@@ -26,8 +29,19 @@ public class AgendamentosController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Agendamento agendamento)
     {
+        // Não permite agendamentos além da semana corrente
+        var hoje = DateTime.Today;
+        var fimDaSemana = hoje.AddDays(6 - (int)hoje.DayOfWeek);
+
+        if (agendamento.DataHoraInicio.Date > fimDaSemana)
+        {
+            return BadRequest("Não é permitido agendar horários além da semana corrente (até Sábado).");
+        }
+
+        // Garante que DataHoraFim seja sempre 1 hora após DataHoraInicio
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
         
+        // Garante cor padrão se estiver vazia
         if (string.IsNullOrWhiteSpace(agendamento.Cor))
         {
             agendamento.Cor = "#3788d8";
@@ -64,12 +78,10 @@ public class AgendamentosController : ControllerBase
         
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
         
-        // Garante cor padrão se estiver vazia
         if (string.IsNullOrWhiteSpace(agendamento.Cor))
         {
             agendamento.Cor = "#3788d8";
         }
-
 
         _context.Entry(agendamento).State = EntityState.Modified;
 

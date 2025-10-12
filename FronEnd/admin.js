@@ -54,9 +54,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Lógica do formulário
-    const hoje = new Date().toISOString().split('T')[0];
-    dataInput.setAttribute('min', hoje);
+    // Lógica do formulário para limitar a data
+    const hoje = new Date();
+    // Ajuste para zerar as horas, garantindo comparações de data corretas
+    hoje.setHours(0, 0, 0, 0); 
+    const diaDaSemana = hoje.getDay(); // Domingo = 0, Sábado = 6
+    
+    const hojeString = hoje.toISOString().split('T')[0];
+    dataInput.setAttribute('min', hojeString);
+
+    const diasAteSabado = 6 - diaDaSemana;
+    const ultimoDiaSemana = new Date(hoje);
+    ultimoDiaSemana.setDate(hoje.getDate() + diasAteSabado);
+    const ultimoDiaSemanaString = ultimoDiaSemana.toISOString().split('T')[0];
+    
+    dataInput.setAttribute('max', ultimoDiaSemanaString);
 
     dataInput.parentElement.addEventListener('click', (e) => { if (e.target !== dataInput) dataInput.showPicker(); });
     horaInput.parentElement.addEventListener('click', (e) => { if (e.target !== horaInput) horaInput.showPicker(); });
@@ -83,6 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
+        const dataSelecionada = new Date(dataInput.value + 'T00:00:00');
+        if (dataSelecionada > ultimoDiaSemana) {
+            showModal('Data Inválida', 'Não é permitido agendar horários além da semana corrente (Para horários muito no futuro, falar com o responsável da quadra).', 'error');
+            return; // Impede o envio do formulário
+        }
+
         const horaSelecionada = horaInput.value;
         const hora = parseInt(horaSelecionada.split(':')[0]);
         if (hora < 8 || hora > 21) {
@@ -92,10 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showModal('', '', 'loading');
 
-        // Calcula a hora de fim (1 hora depois)
-        const [horaInicio, minutoInicio] = horaInput.value.split(':');
         const dataHoraInicioObj = new Date(`${dataInput.value}T${horaInput.value}`);
-        const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000); 
+        const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000);
         
         const agendamento = {
             id: 0,
@@ -115,11 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 showModal('Sucesso!', 'O horário foi agendado com sucesso.', 'success');
-            } else if (response.status === 409) {
+            } else {
                 const errorMessage = await response.text();
                 showModal('Erro de Agendamento', errorMessage, 'error');
-            } else {
-                showModal('Erro Inesperado', 'Ocorreu uma falha ao salvar. Por favor, tente novamente.', 'error');
             }
 
         } catch (error) {
