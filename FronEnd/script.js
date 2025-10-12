@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
 
                     if (calendar.view.type === 'dayGridMonth') {
-                        window.location.href = 'admin.html';
+                        showTermosModal('admin.html');
                     } else if (calendar.view.type === 'timeGridDay') {
                         if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
                             const dataFormatada = dataAtualDaViewSemHoras.toISOString().split('T')[0];
-                            window.location.href = `admin.html?data=${dataFormatada}`;
+                            showTermosModal(`admin.html?data=${dataFormatada}`);
                         } else {
                             showModal();
                         }
@@ -133,6 +133,32 @@ function hideModal() {
     modal.style.display = 'none';
 }
 
+// Funções do modal de termos
+function showTermosModal(redirectUrl) {
+    const termosModal = document.getElementById('termos-overlay');
+    termosModal.style.display = 'flex';
+    
+    // Armazenar URL de redirecionamento
+    termosModal.setAttribute('data-redirect', redirectUrl);
+}
+
+function hideTermosModal() {
+    const termosModal = document.getElementById('termos-overlay');
+    termosModal.style.display = 'none';
+}
+
+function aceitarTermos() {
+    const termosModal = document.getElementById('termos-overlay');
+    const redirectUrl = termosModal.getAttribute('data-redirect');
+    
+    hideTermosModal();
+    
+    // Redirecionar para página de agendamento
+    if (redirectUrl) {
+        window.location.href = redirectUrl;
+    }
+}
+
 // Event listener para fechar o modal
 document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.getElementById('modal-close-btn');
@@ -146,6 +172,27 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.addEventListener('click', function(event) {
             if (event.target === modal) {
                 hideModal();
+            }
+        });
+    }
+    
+    // Event listeners para modal de termos
+    const termosAceitoBtn = document.getElementById('termos-aceito-btn');
+    const termosCancelarBtn = document.getElementById('termos-cancelar-btn');
+    const termosModal = document.getElementById('termos-overlay');
+    
+    if (termosAceitoBtn) {
+        termosAceitoBtn.addEventListener('click', aceitarTermos);
+    }
+    
+    if (termosCancelarBtn) {
+        termosCancelarBtn.addEventListener('click', hideTermosModal);
+    }
+    
+    if (termosModal) {
+        termosModal.addEventListener('click', function(event) {
+            if (event.target === termosModal) {
+                hideTermosModal();
             }
         });
     }

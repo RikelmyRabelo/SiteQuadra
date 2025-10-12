@@ -178,6 +178,81 @@ header h1 {
     box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
 }
 
+/* Modal de termos específico */
+.modal-terms {
+    max-width: 500px;
+    text-align: left;
+}
+
+.modal-terms h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #dc3545;
+    font-size: 1.4em;
+}
+
+.modal-terms #termos-message {
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.modal-terms #termos-message p {
+    margin-bottom: 15px;
+    font-size: 1em;
+    color: #333;
+}
+
+.termos-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-aceitar {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    flex: 1;
+}
+
+.btn-aceitar:hover {
+    background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
+    color: #333;
+    border-color: #dc3545;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+    border: 2px solid #6c757d;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    flex: 1;
+}
+
+.btn-cancelar:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
 /* Controlar altura do calendário na vista diária */
 .fc-timeGridDay-view .fc-scrollgrid {
     height: fit-content !important;
