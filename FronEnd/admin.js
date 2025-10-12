@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+    // Seus comentários e código existente para obter os elementos...
     const form = document.getElementById('form-agendamento');
     const dataInput = document.getElementById('data');
     const horaInput = document.getElementById('hora');
@@ -54,9 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Lógica do formulário
-    const hoje = new Date().toISOString().split('T')[0];
-    dataInput.setAttribute('min', hoje);
+
+    // Define a data mínima para hoje
+    const hoje = new Date();
+    // Ajuste para o fuso horário local para evitar erros de um dia para o outro
+    hoje.setMinutes(hoje.getMinutes() - hoje.getTimezoneOffset());
+    const dataMinima = hoje.toISOString().split('T')[0];
+    dataInput.setAttribute('min', dataMinima);
 
     dataInput.parentElement.addEventListener('click', (e) => { if (e.target !== dataInput) dataInput.showPicker(); });
     horaInput.parentElement.addEventListener('click', (e) => { if (e.target !== horaInput) horaInput.showPicker(); });
@@ -74,22 +78,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     horaInput.addEventListener('change', atualizarInfoHorario);
 
-    // Lógica de Envio do Formulário com todas as correções
+
+    // --- LÓGICA DE ENVIO DO FORMULÁRIO ATUALIZADA ---
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const dataSelecionada = dataInput.value;
-        const hojeString = new Date().toISOString().split('T')[0];
-        if (dataSelecionada < hojeString) {
+        const horaSelecionada = horaInput.value;
+
+        // --- VALIDAÇÃO DA DATA NO PASSADO ---
+        if (dataSelecionada < dataMinima) {
             showModal('Data Inválida', 'Não é possível agendar um horário em uma data passada.', 'error');
-            return; // Para a execução
+            return; // Interrompe a execução aqui
         }
 
-        const horaSelecionada = horaInput.value;
-        const hora = parseInt(horaSelecionada.split(':')[0]);
-        if (hora < 8 || hora > 21) {
-            showModal('Horário Inválido', 'O horário de funcionamento da quadra é das 08:00 às 21:00.', 'error');
-            return; // Para a execução
+        // Validação de campos vazios (já que novalidate foi adicionado)
+        if (!document.getElementById('nome').value || !dataSelecionada || !horaSelecionada) {
+            // A validação padrão do navegador para campos 'required' ainda funciona bem aqui.
+            // Se quisermos um pop-up para isso, podemos adicionar. Por agora, mantemos o padrão.
+            form.reportValidity();
+            return;
         }
 
         showModal('', '', 'loading');
@@ -115,13 +123,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     const errorMessage = await response.text();
                     showModal('Erro de Agendamento', errorMessage, 'error');
                 } else {
-                    showModal('Erro Inesperado', 'Ocorreu uma falha ao salvar. Por favor, tente novamente.', 'error');
+                    showModal('Erro Inesperado', 'Ocorreu uma falha ao salvar.', 'error');
                 }
             }, 100);
 
         } catch (error) {
             setTimeout(() => {
-                console.error('Erro de conexão:', error);
                 showModal('Erro de Conexão', 'Não foi possível se comunicar com o servidor.', 'error');
             }, 100);
         }
