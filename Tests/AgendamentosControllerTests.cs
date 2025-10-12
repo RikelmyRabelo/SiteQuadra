@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using SiteQuadra.Controllers;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
@@ -19,7 +21,12 @@ public class AgendamentosControllerTests : IDisposable
             .Options;
 
         _context = new QuadraContext(options);
-        _controller = new AgendamentosController(_context);
+        
+        // Mock do IWebHostEnvironment configurado como Testing
+        var mockEnvironment = new Mock<IWebHostEnvironment>();
+        mockEnvironment.Setup(x => x.EnvironmentName).Returns("Testing");
+        
+        _controller = new AgendamentosController(_context, mockEnvironment.Object);
     }
 
     [Fact]

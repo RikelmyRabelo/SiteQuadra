@@ -480,3 +480,5 @@ C:\SiteQuadra\Tests\obj\Debug\net9.0\refint\SiteQuadra.Tests.dll
 C:\SiteQuadra\Tests\obj\Debug\net9.0\SiteQuadra.Tests.pdb
 C:\SiteQuadra\Tests\obj\Debug\net9.0\SiteQuadra.Tests.genruntimeconfig.cache
 C:\SiteQuadra\Tests\obj\Debug\net9.0\ref\SiteQuadra.Tests.dll
+C:\SiteQuadra\Tests\bin\Debug\net9.0\Castle.Core.dll
+C:\SiteQuadra\Tests\bin\Debug\net9.0\Moq.dll

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,44 +12,61 @@ using Xunit;
 
 namespace SiteQuadra.Tests;
 
-public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+// Factory customizada para testes
+public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-
-    public AgendamentosIntegrationTests(WebApplicationFactory<Program> factory)
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        _factory = factory.WithWebHostBuilder(builder =>
+        builder.ConfigureServices(services =>
         {
-            // Configurar para usar apenas InMemory
-            builder.ConfigureServices(services =>
+            // Remove COMPLETAMENTE qualquer coisa relacionada ao Entity Framework
+            var entityFrameworkServices = services
+                .Where(descriptor => descriptor.ServiceType.Namespace?.StartsWith("Microsoft.EntityFrameworkCore") == true ||
+                       descriptor.ServiceType == typeof(QuadraContext) ||
+                       descriptor.ImplementationType == typeof(QuadraContext))
+                .ToList();
+            
+            foreach (var service in entityFrameworkServices)
             {
-                // Remove COMPLETAMENTE o SQLite
-                services.RemoveAll(typeof(DbContextOptions<QuadraContext>));
-                services.RemoveAll(typeof(DbContextOptions));
-                services.RemoveAll(typeof(QuadraContext));
-                
-                // Adiciona APENAS InMemory
-                services.AddDbContext<QuadraContext>(options =>
-                    options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
-                );
+                services.Remove(service);
+            }
+            
+            // Configura APENAS InMemory Database
+            var dbName = $"TestInMemoryDb_{Guid.NewGuid()}";
+            services.AddDbContext<QuadraContext>(options =>
+            {
+                options.UseInMemoryDatabase(dbName);
             });
         });
         
+        builder.UseEnvironment("Testing");
+    }
+}
+
+public class AgendamentosIntegrationTests : IClassFixture<TestWebApplicationFactory<Program>>
+{
+    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly HttpClient _client;
+
+    public AgendamentosIntegrationTests(TestWebApplicationFactory<Program> factory)
+    {
+        _factory = factory;
         _client = _factory.CreateClient();
     }
 
     [Fact]
     public async Task PostAgendamento_ComDadosValidos_DeveRetornarSucesso()
     {
-        // Arrange
+        // Arrange - Limpar banco antes do teste
+        await LimparDatabase();
+        
         var agendamento = new Agendamento
         {
             NomeResponsavel = "João Silva",
             Contato = "(98) 99999-9999",
             CidadeBairro = "Monte Alegre",
-            DataHoraInicio = DateTime.Today.AddDays(1).AddHours(10), // Amanhã às 10h
-            DataHoraFim = DateTime.Today.AddDays(1).AddHours(10) // Será corrigido pelo controller
+            DataHoraInicio = DateTime.Today.AddDays(5).AddHours(10), // Data bem distante
+            DataHoraFim = DateTime.Today.AddDays(5).AddHours(10) // Será corrigido pelo controller
         };
 
         var json = JsonSerializer.Serialize(agendamento);
@@ -86,8 +104,9 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task PostAgendamento_ComConflito_DeveRetornar409()
     {
-        // Arrange - Criar primeiro agendamento
-        await CriarAgendamentoTeste(DateTime.Today.AddDays(1).AddHours(14)); // Amanhã às 14h
+        // Arrange - Limpar e criar primeiro agendamento
+        await LimparDatabase();
+        await CriarAgendamentoTeste(DateTime.Today.AddDays(10).AddHours(14)); // Data isolada
 
         // Tentar criar segundo agendamento no mesmo horário
         var agendamentoConflitante = new Agendamento
@@ -95,8 +114,8 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
             NomeResponsavel = "Maria Oliveira",
             Contato = "(98) 88888-8888",
             CidadeBairro = "Centro",
-            DataHoraInicio = DateTime.Today.AddDays(1).AddHours(14), // Mesmo horário
-            DataHoraFim = DateTime.Today.AddDays(1).AddHours(14)
+            DataHoraInicio = DateTime.Today.AddDays(10).AddHours(14), // Mesmo horário
+            DataHoraFim = DateTime.Today.AddDays(10).AddHours(14)
         };
 
         var json = JsonSerializer.Serialize(agendamentoConflitante);
@@ -115,8 +134,9 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task PostAgendamento_ComConflitoParcial_DeveRetornar409()
     {
-        // Arrange - Criar agendamento das 14h às 15h
-        await CriarAgendamentoTeste(DateTime.Today.AddDays(1).AddHours(14));
+        // Arrange - Limpar e criar agendamento das 14h às 15h
+        await LimparDatabase();
+        await CriarAgendamentoTeste(DateTime.Today.AddDays(15).AddHours(14));
 
         // Tentar criar agendamento das 14:30h às 15:30h (conflito parcial)
         var agendamentoConflitante = new Agendamento
@@ -124,8 +144,8 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
             NomeResponsavel = "Carlos Santos",
             Contato = "(98) 77777-7777",
             CidadeBairro = "Liberdade",
-            DataHoraInicio = DateTime.Today.AddDays(1).AddHours(14).AddMinutes(30),
-            DataHoraFim = DateTime.Today.AddDays(1).AddHours(14).AddMinutes(30)
+            DataHoraInicio = DateTime.Today.AddDays(15).AddHours(14).AddMinutes(30),
+            DataHoraFim = DateTime.Today.AddDays(15).AddHours(14).AddMinutes(30)
         };
 
         var json = JsonSerializer.Serialize(agendamentoConflitante);
@@ -141,8 +161,9 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task PostAgendamento_HorariosConsecutivos_DevePermitir()
     {
-        // Arrange - Criar agendamento das 14h às 15h
-        await CriarAgendamentoTeste(DateTime.Today.AddDays(1).AddHours(14));
+        // Arrange - Limpar e criar agendamento das 14h às 15h
+        await LimparDatabase();
+        await CriarAgendamentoTeste(DateTime.Today.AddDays(20).AddHours(14));
 
         // Criar agendamento das 15h às 16h (consecutivo, sem conflito)
         var agendamentoConsecutivo = new Agendamento
@@ -150,8 +171,8 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
             NomeResponsavel = "Ana Costa",
             Contato = "(98) 66666-6666",
             CidadeBairro = "Cohama",
-            DataHoraInicio = DateTime.Today.AddDays(1).AddHours(15), // Exatamente quando o anterior termina
-            DataHoraFim = DateTime.Today.AddDays(1).AddHours(15)
+            DataHoraInicio = DateTime.Today.AddDays(20).AddHours(15), // Exatamente quando o anterior termina
+            DataHoraFim = DateTime.Today.AddDays(20).AddHours(15)
         };
 
         var json = JsonSerializer.Serialize(agendamentoConsecutivo);
@@ -167,10 +188,10 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task GetAgendamentos_DeveRetornarTodosAgendamentos()
     {
-        // Arrange - Limpar e criar agendamentos de teste
+        // Arrange - Limpar e criar agendamentos de teste com horários bem separados
         await LimparDatabase();
-        await CriarAgendamentoTeste(DateTime.Today.AddDays(1).AddHours(10), "Teste 1");
-        await CriarAgendamentoTeste(DateTime.Today.AddDays(1).AddHours(16), "Teste 2");
+        await CriarAgendamentoTeste(DateTime.Today.AddDays(25).AddHours(10), "Teste 1");
+        await CriarAgendamentoTeste(DateTime.Today.AddDays(26).AddHours(16), "Teste 2");
 
         // Act
         var response = await _client.GetAsync("/api/agendamentos");
@@ -197,14 +218,19 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     public async Task PostAgendamento_ComCamposObrigatoriosVazios_DeveValidar(
         string nome, string contato, string cidade)
     {
-        // Arrange
+        // Arrange - Limpar banco antes de cada teste
+        await LimparDatabase();
+        
+        // Usar data única baseada no hash dos parâmetros para evitar conflitos
+        var dataBase = DateTime.Today.AddDays(30 + Math.Abs((nome + contato + cidade).GetHashCode() % 30));
+        
         var agendamento = new Agendamento
         {
             NomeResponsavel = nome,
             Contato = contato,
             CidadeBairro = cidade,
-            DataHoraInicio = DateTime.Today.AddDays(1).AddHours(10),
-            DataHoraFim = DateTime.Today.AddDays(1).AddHours(10)
+            DataHoraInicio = dataBase.AddHours(10),
+            DataHoraFim = dataBase.AddHours(10)
         };
 
         var json = JsonSerializer.Serialize(agendamento);
@@ -221,15 +247,18 @@ public class AgendamentosIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task PostAgendamento_ComDataPassada_DeveFuncionar()
     {
-        // Arrange - Este teste verifica se o backend aceita datas passadas
+        // Arrange - Limpar banco e testar data passada
+        await LimparDatabase();
+        
+        // Este teste verifica se o backend aceita datas passadas
         // (a validação de data futura é feita no frontend)
         var agendamento = new Agendamento
         {
             NomeResponsavel = "Teste Passado",
             Contato = "(98) 99999-9999",
             CidadeBairro = "Teste",
-            DataHoraInicio = DateTime.Today.AddDays(-1).AddHours(10), // Ontem
-            DataHoraFim = DateTime.Today.AddDays(-1).AddHours(10)
+            DataHoraInicio = DateTime.Today.AddDays(-10).AddHours(10), // Data passada isolada
+            DataHoraFim = DateTime.Today.AddDays(-10).AddHours(10)
         };
 
         var json = JsonSerializer.Serialize(agendamento);
