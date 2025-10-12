@@ -44,3 +44,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Tornar Program acessível para testes
+public partial class Program { }

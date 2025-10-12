@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\SiteQuadra\\src\\SiteQuadra.csproj": {}
+    "C:\\SiteQuadra\\Src\\SiteQuadra.csproj": {}
   },
   "projects": {
-    "C:\\SiteQuadra\\src\\SiteQuadra.csproj": {
+    "C:\\SiteQuadra\\Src\\SiteQuadra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\SiteQuadra\\src\\SiteQuadra.csproj",
+        "projectUniqueName": "C:\\SiteQuadra\\Src\\SiteQuadra.csproj",
         "projectName": "SiteQuadra",
-        "projectPath": "C:\\SiteQuadra\\src\\SiteQuadra.csproj",
+        "projectPath": "C:\\SiteQuadra\\Src\\SiteQuadra.csproj",
         "packagesPath": "C:\\Users\\rikel\\.nuget\\packages\\",
-        "outputPath": "C:\\SiteQuadra\\src\\obj\\",
+        "outputPath": "C:\\SiteQuadra\\Src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rikel\\AppData\\Roaming\\NuGet\\NuGet.Config",
