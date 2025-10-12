@@ -26,6 +26,9 @@ public class AgendamentosController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Agendamento agendamento)
     {
+        // Garante que DataHoraFim seja sempre 1 hora após DataHoraInicio
+        agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);
+        
         // Busca agendamentos que colidem
         var existeConflito = _context.Agendamentos.Any(a =>
             a.DataHoraInicio.Date == agendamento.DataHoraInicio.Date && // Mesmo dia

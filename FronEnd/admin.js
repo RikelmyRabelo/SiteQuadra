@@ -92,13 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showModal('', '', 'loading');
 
+        // Calcula a hora de fim (1 hora depois)
+        const [horaInicio, minutoInicio] = horaInput.value.split(':');
+        const dataHoraInicioObj = new Date(`${dataInput.value}T${horaInput.value}`);
+        const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000); // +1 hora
+        
         const agendamento = {
             id: 0,
             nomeResponsavel: document.getElementById('nome').value,
             contato: document.getElementById('contato').value,          
             cidadeBairro: document.getElementById('cidade-bairro').value, 
             dataHoraInicio: `${dataInput.value}T${horaInput.value}`,
-            dataHoraFim: `${dataInput.value}T${horaInput.value}`
+            dataHoraFim: dataHoraFimObj.toISOString().slice(0, 16) // Format: YYYY-MM-DDTHH:MM
         };
 
         try {
