@@ -11,10 +11,18 @@ document.addEventListener('DOMContentLoaded', function() {
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         
+        buttonText: {
+            today: 'hoje',
+            month: 'mês',
+            week: 'semana',
+            day: 'dia'
+        },
+        
+        nowIndicator: true,
+
         displayEventTime: true,
 
         events: 'http://localhost:5201/api/agendamentos',
-
   
         eventDataTransform: function(eventData) {
             return {
