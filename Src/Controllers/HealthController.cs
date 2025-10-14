@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace SiteQuadra.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class HealthController : ControllerBase
 {
     private readonly QuadraContext _context;
@@ -59,7 +59,7 @@ public class HealthController : ControllerBase
 
         var detailedHealth = new
         {
-            Status = checks.All(c => c.Status == "Healthy") ? "Healthy" : "Unhealthy",
+            Status = checks.All(c => GetStatusFromObject(c) == "Healthy") ? "Healthy" : "Unhealthy",
             Timestamp = startTime,
             Duration = (endTime - startTime).TotalMilliseconds,
             Version = GetApplicationVersion(),
@@ -246,8 +246,8 @@ public class HealthController : ControllerBase
 
             // Testa escrita
             var testFile = Path.Combine(Directory.GetCurrentDirectory(), "health_test.tmp");
-            File.WriteAllText(testFile, "test");
-            File.Delete(testFile);
+            System.IO.File.WriteAllText(testFile, "test");
+            System.IO.File.Delete(testFile);
 
             return new
             {

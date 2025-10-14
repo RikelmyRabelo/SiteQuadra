@@ -32,6 +32,15 @@ public class AgendamentosController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Agendamento agendamento)
     {
+        // Não permite agendamentos em datas passadas (EXCETO em testes)
+        if (!_environment.EnvironmentName.Equals("Testing", StringComparison.OrdinalIgnoreCase))
+        {
+            if (agendamento.DataHoraInicio.Date < DateTime.Today)
+            {
+                return BadRequest("Não é permitido agendar horários em datas passadas.");
+            }
+        }
+
         // Não permite agendamentos além da semana corrente (EXCETO em testes)
         if (!_environment.EnvironmentName.Equals("Testing", StringComparison.OrdinalIgnoreCase))
         {
@@ -58,7 +67,7 @@ public class AgendamentosController : ControllerBase
             a.DataHoraInicio.Date == agendamento.DataHoraInicio.Date && // Mesmo dia
             (
                 (agendamento.DataHoraInicio < a.DataHoraFim) && // Início do novo dentro de outro
-                (agendamento.DataHoraFim > a.DataHoraInicio)    // Fim do novo dfclentro de outro
+                (agendamento.DataHoraFim > a.DataHoraInicio)    // Fim do novo dentro de outro
             )
         );
 
@@ -80,6 +89,15 @@ public class AgendamentosController : ControllerBase
         if (id != agendamento.Id)
         {
             return BadRequest();
+        }
+
+        // Não permite agendamentos em datas passadas (EXCETO em testes)
+        if (!_environment.EnvironmentName.Equals("Testing", StringComparison.OrdinalIgnoreCase))
+        {
+            if (agendamento.DataHoraInicio.Date < DateTime.Today)
+            {
+                return BadRequest("Não é permitido agendar horários em datas passadas.");
+            }
         }
         
         agendamento.DataHoraFim = agendamento.DataHoraInicio.AddHours(1);

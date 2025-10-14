@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function validateTokenAndRedirect(token) {
         try {
-            const response = await fetch('http://localhost:5201/api/admin/agendamentos', {
+            const response = await fetch('/api/admin/agendamentos', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.style.display = 'none';
 
         try {
-            const response = await fetch('http://localhost:5201/api/admin/login', {
+            const response = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

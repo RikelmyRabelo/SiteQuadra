@@ -32,31 +32,18 @@ public class DatabaseInitializationService : IDatabaseInitializationService
         {
             _logger.LogInformation("🗄️ Inicializando banco de dados...");
 
-            // Verifica se o banco existe e pode conectar
-            var canConnect = await _context.Database.CanConnectAsync();
-            
-            if (!canConnect)
+            // Verifica se é um banco relacional antes de executar migrations
+            if (_context.Database.IsRelational())
             {
-                _logger.LogInformation("📁 Banco de dados não existe. Criando...");
-                await _context.Database.EnsureCreatedAsync();
-                _logger.LogInformation("✅ Banco de dados criado com sucesso");
-            }
-            else
-            {
-                _logger.LogInformation("✅ Banco de dados já existe e está acessível");
-            }
-
-            // Executa migrations pendentes (se houver)
-            var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
-            if (pendingMigrations.Any())
-            {
-                _logger.LogInformation("🔄 Aplicando {Count} migrations pendentes...", pendingMigrations.Count());
+                _logger.LogInformation("🔄 Executando migrations...");
                 await _context.Database.MigrateAsync();
-                _logger.LogInformation("✅ Migrations aplicadas com sucesso");
+                _logger.LogInformation("✅ Database inicializado via migrations");
             }
             else
             {
-                _logger.LogInformation("✅ Banco de dados está atualizado");
+                _logger.LogInformation("🔄 Garantindo criação do banco...");
+                await _context.Database.EnsureCreatedAsync();
+                _logger.LogInformation("✅ Database inicializado via EnsureCreated");
             }
 
             // Verifica integridade do banco
@@ -128,6 +115,12 @@ public class DatabaseInitializationService : IDatabaseInitializationService
     {
         try
         {
+            // Para bancos InMemory (testes), assume que as tabelas existem se o contexto foi criado
+            if (!_context.Database.IsRelational())
+            {
+                return true;
+            }
+
             // Para SQLite, verifica na tabela sqlite_master
             var sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
             
@@ -139,7 +132,10 @@ public class DatabaseInitializationService : IDatabaseInitializationService
             parameter.Value = tableName;
             command.Parameters.Add(parameter);
 
-            await _context.Database.OpenConnectionAsync();
+            if (_context.Database.IsRelational())
+            {
+                await _context.Database.OpenConnectionAsync();
+            }
             
             var result = await command.ExecuteScalarAsync();
             return result != null;
@@ -151,7 +147,10 @@ public class DatabaseInitializationService : IDatabaseInitializationService
         }
         finally
         {
-            await _context.Database.CloseConnectionAsync();
+            if (_context.Database.IsRelational())
+            {
+                await _context.Database.CloseConnectionAsync();
+            }
         }
     }
 

@@ -125,16 +125,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const dataHoraFimObj = new Date(dataHoraInicioObj.getTime() + 60 * 60 * 1000);
         
         const agendamento = {
-            id: 0,
             nomeResponsavel: document.getElementById('nome').value,
             contato: document.getElementById('contato').value,          
             cidadeBairro: document.getElementById('cidade-bairro').value, 
-            dataHoraInicio: `${dataInput.value}T${horaInput.value}`,
-            dataHoraFim: dataHoraFimObj.toISOString().slice(0, 16)
+            dataHoraInicio: `${dataInput.value}T${horaInput.value}:00`,
+            dataHoraFim: dataHoraFimObj.toISOString().slice(0, 19),
+            cor: '#3788d8'
         };
 
         try {
-            const response = await fetch('http://localhost:5201/api/agendamentos', {
+            const response = await fetch('/api/agendamentos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(agendamento),

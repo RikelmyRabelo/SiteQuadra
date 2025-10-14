@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function loadEstatisticas() {
         try {
-            const response = await fetch('http://localhost:5201/api/admin/estatisticas', {
+            const response = await fetch('/api/admin/estatisticas', {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showLoading(true);
         
         try {
-            const response = await fetch('http://localhost:5201/api/admin/agendamentos', {
+            const response = await fetch('/api/admin/agendamentos', {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function removeAgendamento(id) {
         console.log('🔄 Iniciando remoção do agendamento ID:', id);
         try {
-            const response = await fetch(`http://localhost:5201/api/admin/agendamentos/${id}`, {
+            const response = await fetch(`/api/admin/agendamentos/${id}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });

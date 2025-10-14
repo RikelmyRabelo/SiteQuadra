@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         nowIndicator: true,
         displayEventTime: true,
-        events: 'http://localhost:5201/api/agendamentos',
+        events: '/api/agendamentos',
   
         eventDataTransform: function(eventData) {
             return {

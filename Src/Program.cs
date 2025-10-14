@@ -97,10 +97,10 @@ app.UseMiddleware<AdminAuthMiddleware>();
 
 app.UseAuthorization();
 
-app.MapControllers();
+// Health check endpoint para Railway - DEVE VIR ANTES dos controllers
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow })).WithName("Health");
 
-// Health check endpoint para Railway
-app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }));
+app.MapControllers();
 
 // Rota padrão para o frontend (SPA fallback)
 app.MapFallbackToFile("index.html");
@@ -120,6 +120,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-// Tornar Program acessível para testes
-public partial class Program { }

@@ -12,6 +12,7 @@ public interface IAdminSecurityService
     bool IsValidToken(string token);
     void StoreToken(string token);
     void RemoveToken(string token);
+    Task<string> GetStoredPasswordHashAsync();
 }
 
 public class AdminSecurityService : IAdminSecurityService
