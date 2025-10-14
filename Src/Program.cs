@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
+using SiteQuadra.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,9 @@ app.UseHttpsRedirection();
 
 // CORS AQUI
 app.UseCors("AllowAllOrigins");
+
+// Middleware de autenticação administrativa
+app.UseMiddleware<AdminAuthMiddleware>();
 
 app.UseAuthorization();
 

@@ -58,7 +58,7 @@ public class AgendamentosController : ControllerBase
             a.DataHoraInicio.Date == agendamento.DataHoraInicio.Date && // Mesmo dia
             (
                 (agendamento.DataHoraInicio < a.DataHoraFim) && // Início do novo dentro de outro
-                (agendamento.DataHoraFim > a.DataHoraInicio)    // Fim do novo dentro de outro
+                (agendamento.DataHoraFim > a.DataHoraInicio)    // Fim do novo dfclentro de outro
             )
         );
 

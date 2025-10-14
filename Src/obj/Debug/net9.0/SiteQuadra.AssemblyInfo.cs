@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SiteQuadra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7410af4e760588c6740d5d028e51a372be1d27c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0d13eb9c945e4d082506fcdc635e50562c82061")]
 [assembly: System.Reflection.AssemblyProductAttribute("SiteQuadra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SiteQuadra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

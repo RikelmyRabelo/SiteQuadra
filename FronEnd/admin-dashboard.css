@@ -1,0 +1,434 @@
+/* Estilos específicos para o dashboard administrativo */
+
+/* Reset adicional */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Cabeçalho do admin */
+.admin-header {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    color: white;
+    padding: 20px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Botões da header */
+.btn-secondary, .btn-danger {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Container principal */
+.admin-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* Seção de estatísticas */
+.stats-section {
+    margin-bottom: 40px;
+}
+
+.stats-section h2 {
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    color: #2d3748;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Seção de agendamentos */
+.agendamentos-section h2 {
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+}
+
+.loading .loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #4a90e2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Container de agendamentos */
+.agendamentos-container {
+    display: grid;
+    gap: 20px;
+}
+
+/* Card de agendamento */
+.agendamento-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.agendamento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.agendamento-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.agendamento-header h3 {
+    color: #2d3748;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-remove {
+    background: #fed7d7;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-remove:hover {
+    background: #feb2b2;
+    color: #9b2c2c;
+    transform: translateY(-1px);
+}
+
+.agendamento-details {
+    padding: 20px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f7fafc;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #718096;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-value {
+    color: #2d3748;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Mensagem vazia */
+.empty-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+}
+
+.empty-message p {
+    font-size: 1.1rem;
+}
+
+/* Modais */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-confirm {
+    padding: 30px;
+    text-align: center;
+}
+
+.modal-confirm h3 {
+    color: #e53e3e;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.modal-confirm p {
+    color: #4a5568;
+    margin-bottom: 20px;
+}
+
+.confirm-details {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.btn-primary {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+/* Estados dos modais */
+.modal-success {
+    border-top: 4px solid #38a169;
+}
+
+.modal-error {
+    border-top: 4px solid #e53e3e;
+}
+
+.modal-success h3 {
+    color: #38a169;
+}
+
+.modal-error h3 {
+    color: #e53e3e;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .admin-header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .admin-main {
+        padding: 20px 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .agendamento-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        text-align: left;
+        gap: 8px;
+    }
+
+    .detail-value {
+        text-align: left;
+        font-weight: 500;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-confirm {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-header {
+        padding: 12px 15px;
+    }
+
+    .admin-main {
+        padding: 15px 10px;
+    }
+
+    .agendamento-card {
+        border-radius: 8px;
+    }
+
+    .agendamento-header {
+        padding: 15px;
+    }
+
+    .agendamento-details {
+        padding: 15px;
+    }
+}
