@@ -1,0 +1,11 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+startCommand = "dotnet SiteQuadra.dll"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+
+[environments.production]
+variables = { ASPNETCORE_ENVIRONMENT = "Production" }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Administrativo - Quadra</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <header class="login-header">
+                <h1>🔐 Acesso Administrativo</h1>
+                <p>Digite a senha para acessar o painel administrativo</p>
+            </header>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="password">Senha de Administrador:</label>
+                    <input type="password" id="password" required placeholder="Digite a senha">
+                </div>
+                
+                <button type="submit" id="login-btn" class="login-btn">
+                    <span id="login-text">Entrar</span>
+                    <div id="login-loader" class="loader" style="display: none;"></div>
+                </button>
+            </form>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            
+            <footer class="login-footer">
+                <p><a href="../Calendar/index.html">← Voltar para a agenda pública</a></p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="login.js"></script>
+</body>
+</html>

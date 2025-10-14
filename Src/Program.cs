@@ -14,6 +14,8 @@ builder.Services.AddDbContext<QuadraContext>(options =>
 builder.Services.AddSingleton<IAdminSecurityService, AdminSecurityService>();
 builder.Services.AddSingleton<IBackupService, BackupService>();
 builder.Services.AddHostedService<BackupService>();
+builder.Services.AddTransient<IConfigurationValidationService, ConfigurationValidationService>();
+builder.Services.AddTransient<IDatabaseInitializationService, DatabaseInitializationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -63,6 +65,10 @@ else
 
 app.UseHttpsRedirection();
 
+// Servidor de arquivos estáticos (Frontend)
+app.UseDefaultFiles(); // Serve index.html automaticamente
+app.UseStaticFiles(); // Serve arquivos estáticos
+
 // CORS AQUI - Política segura
 app.UseCors("SecurePolicy");
 
@@ -90,9 +96,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Inicializa senha administrativa na primeira execução
+// Rota padrão para o frontend (SPA fallback)
+app.MapFallbackToFile("index.html");
+
+// Inicialização do sistema
 using (var scope = app.Services.CreateScope())
 {
+    var configValidation = scope.ServiceProvider.GetRequiredService<IConfigurationValidationService>();
+    await configValidation.ValidateConfigurationAsync();
+    
+    var dbInitialization = scope.ServiceProvider.GetRequiredService<IDatabaseInitializationService>();
+    await dbInitialization.InitializeAsync();
+    await dbInitialization.SeedDataAsync();
+    
     var adminSecurity = scope.ServiceProvider.GetRequiredService<IAdminSecurityService>();
     await adminSecurity.InitializeAdminPasswordAsync();
 }
