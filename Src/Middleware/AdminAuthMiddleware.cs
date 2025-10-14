@@ -19,8 +19,8 @@ public class AdminAuthMiddleware
     {
         var path = context.Request.Path.Value?.ToLower() ?? "";
         
-        // Só aplica autenticação para rotas administrativas
-        if (path.StartsWith("/api/admin/"))
+        // Só aplica autenticação para rotas administrativas, exceto login
+        if (path.StartsWith("/api/admin/") && !path.Equals("/api/admin/login"))
         {
             var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
             
