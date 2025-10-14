@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
 
                     if (calendar.view.type === 'dayGridMonth') {
-                        showTermosModal('admin.html');
+                        showTermosModal('../Booking/booking.html');
                     } else if (calendar.view.type === 'timeGridDay') {
                         if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
                             const dataFormatada = dataAtualDaViewSemHoras.toISOString().split('T')[0];
-                            showTermosModal(`admin.html?data=${dataFormatada}`);
+                            showTermosModal(`../Booking/booking.html?data=${dataFormatada}`);
                         } else {
                             showModal();
                         }

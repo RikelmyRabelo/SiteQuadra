@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda da Quadra</title>
+    <link rel="stylesheet" href="calendar.css">
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+</head>
+<body>
+
+    <header>
+        <h1>Agenda da Quadra</h1>
+        <div class="admin-link">
+            <a href="../Admin/login.html" class="admin-access">🔐 Área Administrativa</a>
+        </div>
+    </header>
+
+    <main>
+        <div id="calendario"></div>
+    </main>
+
+    <!-- Modal de aviso -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Aviso</h3>
+            <p id="modal-message">Não é permitido agendar horários além da semana atual. Para horários muito no futuro, fale com o responsável.</p>
+            <button id="modal-close-btn">OK</button>
+        </div>
+    </div>
+
+    <!-- Modal de termos de uso -->
+    <div id="termos-overlay" class="modal-overlay">
+        <div class="modal-content modal-terms">
+            <h3 id="termos-title">Um Lembrete Importante</h3>
+            <div id="termos-message">
+                <p>Quem retira as chaves fica responsável pela quadra durante o uso. Por favor, cuide do nosso espaço, mantenha tudo limpo e não se esqueça de trancar o portão na saída.</p>
+                <p><strong>Bom jogo!</strong></p>
+            </div>
+            <div class="termos-buttons">
+                <button id="termos-aceito-btn" class="btn-aceitar">Aceito os Termos</button>
+                <button id="termos-cancelar-btn" class="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="calendar.js"></script>
+</body>
+</html>

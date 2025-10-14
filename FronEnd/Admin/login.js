@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 // Token válido, redireciona para o dashboard
-                window.location.href = 'admin-dashboard.html';
+                window.location.href = 'dashboard.html';
             } else {
                 // Token inválido, remove do localStorage
                 localStorage.removeItem('admin_token');
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Pequeno delay para mostrar sucesso
                 loginText.textContent = '✅ Sucesso!';
                 setTimeout(() => {
-                    window.location.href = 'admin-dashboard.html';
+                    window.location.href = 'dashboard.html';
                 }, 500);
                 
             } else {

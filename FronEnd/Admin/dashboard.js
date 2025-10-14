@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function redirectToLogin() {
-        window.location.href = 'admin-login.html';
+        window.location.href = 'login.html';
     }
     
     function getAuthHeaders() {
