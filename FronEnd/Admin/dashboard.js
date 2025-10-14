@@ -139,18 +139,18 @@ document.addEventListener('DOMContentLoaded', function() {
         card.innerHTML = `
             <div class="agendamento-header">
                 <h3>👤 ${agendamento.nomeResponsavel}</h3>
-                <button class="btn-remove" data-id="${agendamento.id}" data-nome="${agendamento.nomeResponsavel}" data-horario="${agendamento.horarioFormatado}" data-data="${agendamento.dataFormatada}">
+                <button class="btn-remove" data-id="${agendamento.id}" data-nome="${agendamento.nomeResponsavel}" data-horario="${agendamento.horarioFormatado || 'N/A'}" data-data="${agendamento.dataFormatada || 'N/A'}">
                     🗑️ Remover
                 </button>
             </div>
             <div class="agendamento-details">
                 <div class="detail-row">
                     <span class="detail-label">📅 Data:</span>
-                    <span class="detail-value">${agendamento.dataFormatada}</span>
+                    <span class="detail-value">${agendamento.dataFormatada || 'N/A'}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">⏰ Horário:</span>
-                    <span class="detail-value">${agendamento.horarioFormatado}</span>
+                    <span class="detail-value">${agendamento.horarioFormatado || 'N/A'}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">📞 Contato:</span>
@@ -173,11 +173,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showConfirmModal(agendamento) {
+        console.log('💬 Abrindo modal de confirmação para:', agendamento);
         currentAgendamentoToRemove = agendamento;
         
         confirmDetails.innerHTML = `
             <strong>${agendamento.nomeResponsavel}</strong><br>
-            ${agendamento.dataFormatada} às ${agendamento.horarioFormatado}
+            ${agendamento.dataFormatada || 'N/A'} às ${agendamento.horarioFormatado || 'N/A'}
         `;
         
         confirmModal.style.display = 'flex';
@@ -189,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     async function removeAgendamento(id) {
+        console.log('🔄 Iniciando remoção do agendamento ID:', id);
         try {
             const response = await fetch(`http://localhost:5201/api/admin/agendamentos/${id}`, {
                 method: 'DELETE',
@@ -199,16 +201,18 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 const result = await response.json();
+                console.log('✅ Agendamento removido:', result);
                 showFeedback('✅ Sucesso', result.message, 'success');
                 
                 // Recarrega os dados
+                console.log('🔄 Recarregando dados...');
                 await loadAllData();
             } else {
                 const error = await response.json();
                 showFeedback('❌ Erro', error.message || 'Não foi possível remover o agendamento', 'error');
             }
         } catch (error) {
-            console.error('Erro ao remover agendamento:', error);
+            console.error('❌ Erro ao remover agendamento:', error);
             showFeedback('Erro de Conexão', 'Não foi possível se comunicar com o servidor', 'error');
         }
     }
@@ -244,9 +248,14 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelRemove.addEventListener('click', hideConfirmModal);
     
     confirmRemove.addEventListener('click', async function() {
-        if (currentAgendamentoToRemove) {
+        console.log('🎯 Botão confirmar clicado. currentAgendamentoToRemove:', currentAgendamentoToRemove);
+        if (currentAgendamentoToRemove && currentAgendamentoToRemove.id) {
+            const agendamentoId = currentAgendamentoToRemove.id;
             hideConfirmModal();
-            await removeAgendamento(currentAgendamentoToRemove.id);
+            await removeAgendamento(agendamentoId);
+        } else {
+            console.error('❌ currentAgendamentoToRemove é null ou não tem ID');
+            hideConfirmModal();
         }
     });
     
