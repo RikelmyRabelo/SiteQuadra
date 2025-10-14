@@ -9,17 +9,24 @@ public interface IAdminSecurityService
     Task<string> InitializeAdminPasswordAsync();
     bool VerifyPassword(string password, string hashedPassword);
     string GenerateSecureToken();
+    bool IsValidToken(string token);
+    void StoreToken(string token);
+    void RemoveToken(string token);
 }
 
 public class AdminSecurityService : IAdminSecurityService
 {
     private readonly IConfiguration _configuration;
     private readonly string _passwordFilePath;
+    private readonly HashSet<string> _validTokens;
+    private readonly object _tokenLock;
     
     public AdminSecurityService(IConfiguration configuration)
     {
         _configuration = configuration;
         _passwordFilePath = Path.Combine(Directory.GetCurrentDirectory(), "admin_security.dat");
+        _validTokens = new HashSet<string>();
+        _tokenLock = new object();
     }
     
     public async Task<string> InitializeAdminPasswordAsync()
@@ -125,5 +132,38 @@ public class AdminSecurityService : IAdminSecurityService
             return null;
             
         return await File.ReadAllTextAsync(_passwordFilePath);
+    }
+    
+    public bool IsValidToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return false;
+            
+        lock (_tokenLock)
+        {
+            return _validTokens.Contains(token);
+        }
+    }
+    
+    public void StoreToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return;
+            
+        lock (_tokenLock)
+        {
+            _validTokens.Add(token);
+        }
+    }
+    
+    public void RemoveToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return;
+            
+        lock (_tokenLock)
+        {
+            _validTokens.Remove(token);
+        }
     }
 }

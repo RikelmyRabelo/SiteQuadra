@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
 using SiteQuadra.Models;
 using Microsoft.Extensions.Configuration;
+using SiteQuadra.Services;
 
 namespace SiteQuadra.Controllers;
 
@@ -11,20 +12,29 @@ namespace SiteQuadra.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly QuadraContext _context;
-    private readonly string _adminPassword;
+    private readonly IAdminSecurityService _adminSecurity;
 
-    public AdminController(QuadraContext context, IConfiguration configuration)
+    public AdminController(QuadraContext context, IAdminSecurityService adminSecurity)
     {
         _context = context;
-        _adminPassword = configuration["AdminPassword"] ?? "admin123";
+        _adminSecurity = adminSecurity;
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] AdminLoginRequest request)
+    public async Task<IActionResult> Login([FromBody] AdminLoginRequest request)
     {
-        if (request.Password == _adminPassword)
+        var storedPasswordHash = await _adminSecurity.GetStoredPasswordHashAsync();
+        
+        if (storedPasswordHash == null)
         {
-            return Ok(new { token = _adminPassword, message = "Login realizado com sucesso" });
+            return StatusCode(500, new { message = "Sistema de autenticação não inicializado" });
+        }
+        
+        if (_adminSecurity.VerifyPassword(request.Password, storedPasswordHash))
+        {
+            var secureToken = _adminSecurity.GenerateSecureToken();
+            _adminSecurity.StoreToken(secureToken);
+            return Ok(new { token = secureToken, message = "Login realizado com sucesso" });
         }
         
         return Unauthorized(new { message = "Senha incorreta" });

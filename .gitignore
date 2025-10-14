@@ -1,0 +1,64 @@
+# Arquivos de segurança - NUNCA commitar
+admin_security.dat
+*.key
+*.pfx
+*.p12
+
+# Banco de dados - usar backup em vez de commitar diretamente
+*.db
+*.sqlite
+*.sqlite3
+
+# Backups
+Backups/
+backups/
+
+# Logs
+logs/
+*.log
+
+# Arquivos de configuração com dados sensíveis
+appsettings.Production.json
+appsettings.*.json.user
+
+# Build outputs
+bin/
+obj/
+out/
+build/
+dist/
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Rider
+.idea/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Node modules (se houver frontend com Node.js)
+node_modules/
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# SSL certificates
+*.crt
+*.pem
+certificates/

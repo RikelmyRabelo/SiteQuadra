@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SiteQuadra.Data;
 using SiteQuadra.Middleware;
+using SiteQuadra.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,19 +10,39 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<QuadraContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Registra serviços
+builder.Services.AddSingleton<IAdminSecurityService, AdminSecurityService>();
+builder.Services.AddSingleton<IBackupService, BackupService>();
+builder.Services.AddHostedService<BackupService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// Configuração de CORS segura
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? new string[0];
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        builder =>
+    options.AddPolicy("SecurePolicy",
+        policy =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
+            if (builder.Environment.IsDevelopment())
+            {
+                // Desenvolvimento: mais permissivo
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            }
+            else
+            {
+                // Produção: restritivo e seguro
+                policy.WithOrigins(allowedOrigins)
+                      .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                      .WithHeaders("Content-Type", "Authorization", "Accept")
+                      .AllowCredentials();
+            }
         });
 });
 
@@ -34,11 +55,33 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    // Força HTTPS em produção
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 
-// CORS AQUI
-app.UseCors("AllowAllOrigins");
+// CORS AQUI - Política segura
+app.UseCors("SecurePolicy");
+
+// Headers de segurança para produção
+if (!app.Environment.IsDevelopment())
+{
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+        context.Response.Headers.Add("X-Frame-Options", "DENY");
+        context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+        context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
+        context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+        await next();
+    });
+}
+
+// Middleware de logging de segurança
+app.UseMiddleware<SecurityLoggingMiddleware>();
 
 // Middleware de autenticação administrativa
 app.UseMiddleware<AdminAuthMiddleware>();
@@ -46,6 +89,13 @@ app.UseMiddleware<AdminAuthMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Inicializa senha administrativa na primeira execução
+using (var scope = app.Services.CreateScope())
+{
+    var adminSecurity = scope.ServiceProvider.GetRequiredService<IAdminSecurityService>();
+    await adminSecurity.InitializeAdminPasswordAsync();
+}
 
 app.Run();
 

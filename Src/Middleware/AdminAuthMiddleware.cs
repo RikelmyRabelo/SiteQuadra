@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using SiteQuadra.Services;
 using System.Threading.Tasks;
 
 namespace SiteQuadra.Middleware;
@@ -7,12 +8,12 @@ namespace SiteQuadra.Middleware;
 public class AdminAuthMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly string _adminPassword;
+    private readonly IAdminSecurityService _adminSecurity;
 
-    public AdminAuthMiddleware(RequestDelegate next, IConfiguration configuration)
+    public AdminAuthMiddleware(RequestDelegate next, IAdminSecurityService adminSecurity)
     {
         _next = next;
-        _adminPassword = configuration["AdminPassword"] ?? "admin123"; // Senha padrão para desenvolvimento
+        _adminSecurity = adminSecurity;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -33,11 +34,11 @@ public class AdminAuthMiddleware
             
             var token = authHeader.Substring("Bearer ".Length).Trim();
             
-            // Validação simples do token (em produção, use JWT ou similar)
-            if (token != _adminPassword)
+            // Validação segura do token
+            if (!_adminSecurity.IsValidToken(token))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Token de autenticação inválido");
+                await context.Response.WriteAsync("Token de autenticação inválido ou expirado");
                 return;
             }
         }
