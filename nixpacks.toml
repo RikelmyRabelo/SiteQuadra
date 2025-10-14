@@ -1,0 +1,18 @@
+[providers]
+dotnet = true
+
+[providers.dotnet]
+version = "8.0"
+projectPath = "Src"
+
+[phases.setup]
+dependsOn = []
+
+[phases.install]
+cmds = ["cd Src && dotnet restore"]
+
+[phases.build] 
+cmds = ["cd Src && dotnet publish --no-restore -c Release -o /app/out"]
+
+[start]
+cmd = "cd /app/out && dotnet SiteQuadra.dll"

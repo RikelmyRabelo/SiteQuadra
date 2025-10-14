@@ -59,11 +59,14 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // Força HTTPS em produção
-    app.UseHsts();
+    // Força HTTPS em produção local, mas não no Railway
+    var isRailway = Environment.GetEnvironmentVariable("RAILWAY_ENVIRONMENT") != null;
+    if (!isRailway)
+    {
+        app.UseHsts();
+        app.UseHttpsRedirection();
+    }
 }
-
-app.UseHttpsRedirection();
 
 // Servidor de arquivos estáticos (Frontend)
 app.UseDefaultFiles(); // Serve index.html automaticamente
@@ -95,6 +98,9 @@ app.UseMiddleware<AdminAuthMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Health check endpoint para Railway
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }));
 
 // Rota padrão para o frontend (SPA fallback)
 app.MapFallbackToFile("index.html");
