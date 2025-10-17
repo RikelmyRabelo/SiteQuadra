@@ -330,6 +330,56 @@ body {
     margin-top: 25px;
 }
 
+.modal-actions .btn-secondary,
+.modal-actions .btn-danger,
+.modal-actions .btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    display: inline-block;
+}
+
+.modal-actions .btn-secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+}
+
+.modal-actions .btn-secondary:hover {
+    background: #cbd5e0;
+    color: #2d3748;
+    transform: translateY(-1px);
+}
+
+.modal-actions .btn-danger {
+    background: #e53e3e;
+    color: white;
+}
+
+.modal-actions .btn-danger:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Garantir visibilidade dos botões do modal */
+#confirm-modal .modal-actions button {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#cancel-remove,
+#confirm-remove {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
 .btn-primary {
     background: #4a90e2;
     color: white;
@@ -404,6 +454,14 @@ body {
 
     .modal-actions {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-actions .btn-secondary,
+    .modal-actions .btn-danger,
+    .modal-actions .btn-primary {
+        width: 100%;
+        padding: 12px 20px;
     }
 
     .modal-confirm {
