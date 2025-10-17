@@ -293,3 +293,175 @@ header h1 {
     overflow-y: visible !important;
     height: auto !important;
 }
+
+/* ==== RESPONSIVIDADE MOBILE ==== */
+
+/* Tablets e dispositivos médios */
+@media (max-width: 768px) {
+    /* Header ajustado */
+    header {
+        margin: 10px;
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .admin-access {
+        font-size: 0.8em;
+        padding: 6px 12px;
+    }
+    
+    /* Container do calendário */
+    main {
+        padding: 10px;
+    }
+    
+    #calendario {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    /* Botões do calendário menores */
+    .fc .fc-toolbar-chunk .fc-button-primary {
+        padding: 6px 12px !important;
+        font-size: 0.8em !important;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.4em !important;
+    }
+    
+    /* Modais ajustados */
+    .modal-content {
+        width: 95%;
+        padding: 20px 25px;
+        margin: 10px;
+    }
+    
+    .termos-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    /* Header ainda menor */
+    header {
+        margin: 5px;
+        padding: 15px 10px;
+    }
+    
+    header h1 {
+        font-size: 1.6em;
+        margin-bottom: 8px;
+    }
+    
+    /* Container do calendário */
+    main {
+        padding: 5px;
+    }
+    
+    #calendario {
+        margin: 5px;
+        padding: 10px;
+    }
+    
+    /* Toolbar do calendário mais compacta */
+    .fc .fc-toolbar {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .fc .fc-toolbar-chunk {
+        display: flex !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 5px !important;
+    }
+    
+    .fc .fc-toolbar-chunk .fc-button-primary {
+        padding: 5px 8px !important;
+        font-size: 0.7em !important;
+        min-width: auto !important;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.1em !important;
+        text-align: center !important;
+        margin-bottom: 5px !important;
+    }
+    
+    /* Grid do calendário mais compacto */
+    .fc .fc-daygrid-day {
+        min-height: 60px !important;
+    }
+    
+    .fc .fc-daygrid-day-number {
+        font-size: 0.9em !important;
+        padding: 2px 4px !important;
+    }
+    
+    .fc-event {
+        font-size: 0.7em !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Modais otimizados para celular */
+    .modal-content {
+        width: 98%;
+        padding: 15px 20px;
+        margin: 5px;
+        border-radius: 15px;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.2em;
+    }
+    
+    .modal-content p {
+        font-size: 1em;
+    }
+    
+    #modal-close-btn,
+    .btn-aceitar,
+    .btn-cancelar {
+        padding: 10px 16px;
+        font-size: 0.8em;
+        width: 100%;
+    }
+    
+    .termos-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 320px) {
+    header h1 {
+        font-size: 1.4em;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1em !important;
+    }
+    
+    .fc .fc-daygrid-day {
+        min-height: 50px !important;
+    }
+    
+    .fc .fc-daygrid-day-number {
+        font-size: 0.8em !important;
+    }
+    
+    .fc-event {
+        font-size: 0.6em !important;
+        padding: 1px 2px !important;
+    }
+}
