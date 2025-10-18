@@ -1,3 +1,22 @@
+// Função utilitária para calcular período permitido para agendamentos
+function calcularPeriodoPermitido() {
+    const hoje = new Date();
+    const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    
+    let ultimoDiaPermitido;
+    if (hoje.getDay() === 6) { // Se hoje é sábado (6)
+        // Permite até o sábado seguinte (próximos 7 dias)
+        ultimoDiaPermitido = new Date(hojeSemHoras);
+        ultimoDiaPermitido.setDate(hojeSemHoras.getDate() + 7);
+    } else {
+        // Regra normal: até o final da semana atual
+        ultimoDiaPermitido = new Date(hojeSemHoras);
+        ultimoDiaPermitido.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+    }
+    
+    return { hojeSemHoras, ultimoDiaPermitido };
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     
     var calendarEl = document.getElementById('calendario');
@@ -23,10 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             agendarButton: {
                 click: function() {
-                    const hoje = new Date();
-                    const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-                    const ultimoDiaSemana = new Date(hojeSemHoras);
-                    ultimoDiaSemana.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+                    const { hojeSemHoras, ultimoDiaPermitido } = calcularPeriodoPermitido();
                     
                     const dataView = calendar.view.currentStart;
                     const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
@@ -34,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (calendar.view.type === 'dayGridMonth') {
                         showTermosModal('../Booking/booking.html');
                     } else if (calendar.view.type === 'timeGridDay') {
-                        if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
+                        if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido) {
                             const dataFormatada = dataAtualDaViewSemHoras.toISOString().split('T')[0];
                             showTermosModal(`../Booking/booking.html?data=${dataFormatada}`);
                         } else {
@@ -61,14 +77,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (info.view.type === 'timeGridDay') {
                     agendarButton.textContent = 'Agendar neste dia';
                     
-                    const hoje = new Date();
-                    const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-                    const ultimoDiaSemana = new Date(hojeSemHoras);
-                    ultimoDiaSemana.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+                    const { hojeSemHoras, ultimoDiaPermitido } = calcularPeriodoPermitido();
+                    
                     const dataView = info.view.currentStart;
                     const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
 
-                    if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaSemana) {
+                    if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido) {
                         agendarButton.classList.remove('fc-button-disabled');
                     } else {
                         agendarButton.classList.add('fc-button-disabled');
