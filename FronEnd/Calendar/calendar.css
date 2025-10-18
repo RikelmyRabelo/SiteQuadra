@@ -349,9 +349,9 @@ header h1 {
     }
 }
 
-/* Celulares */
+/* ==== CELULARES - SOLUÇÃO DEFINITIVA ==== */
 @media (max-width: 480px) {
-    /* Header ainda menor */
+    /* Header */
     header {
         margin: 5px;
         padding: 15px 10px;
@@ -362,56 +362,274 @@ header h1 {
         margin-bottom: 8px;
     }
     
-    /* Container do calendário */
+    /* Container principal */
     main {
         padding: 5px;
     }
     
     #calendario {
         margin: 5px;
-        padding: 10px;
+        padding: 8px;
+        overflow-x: hidden;
+        position: relative;
     }
     
-    /* Toolbar do calendário mais compacta */
+    /* ==> SOLUÇÃO: FORCAR LAYOUT VERTICAL LIMPO <== */
+    
+    /* Container do FullCalendar */
+    .fc {
+        width: 100% !important;
+        font-size: 11px !important;
+        position: relative !important;
+    }
+    
+    /* Toolbar: layout vertical forçado */
     .fc .fc-toolbar {
-        flex-direction: column !important;
-        gap: 10px !important;
-    }
-    
-    .fc .fc-toolbar-chunk {
         display: flex !important;
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-        gap: 5px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-bottom: 15px !important;
+        padding: 8px 0 !important;
+        background: rgba(255,255,255,0.95) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     }
     
-    .fc .fc-toolbar-chunk .fc-button-primary {
-        padding: 5px 8px !important;
-        font-size: 0.7em !important;
-        min-width: auto !important;
-    }
-    
+    /* Título no topo */
     .fc .fc-toolbar-title {
-        font-size: 1.1em !important;
+        order: 1 !important;
+        font-size: 1rem !important;
+        margin: 0 !important;
+        padding: 5px 10px !important;
+        width: auto !important;
         text-align: center !important;
-        margin-bottom: 5px !important;
+        color: #2c3e50 !important;
+        font-weight: 600 !important;
     }
     
-    /* Grid do calendário mais compacto */
+    /* Grupo 1: Navegação */
+    .fc .fc-toolbar-chunk:nth-child(1) {
+        order: 2 !important;
+        display: flex !important;
+        gap: 4px !important;
+        margin: 4px 0 !important;
+    }
+    
+    /* Grupo 2: Título (já ordenado) */
+    .fc .fc-toolbar-chunk:nth-child(2) {
+        order: 1 !important;
+        margin: 0 !important;
+    }
+    
+    /* Grupo 3: Botões adicionais */
+    .fc .fc-toolbar-chunk:nth-child(3) {
+        order: 3 !important;
+        display: flex !important;
+        gap: 4px !important;
+        margin: 4px 0 !important;
+    }
+    
+    /* Todos os botões */
+    .fc .fc-button {
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+        margin: 1px !important;
+        min-width: 45px !important;
+        height: 28px !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        border-radius: 4px !important;
+        display: inline-block !important;
+    }
+    
+    .fc .fc-button-primary {
+        font-size: 10px !important;
+    }
+    
+    /* Grid do calendário */
+    .fc .fc-view-harness {
+        margin-top: 10px !important;
+        clear: both !important;
+        position: relative !important;
+    }
+    
+    /* Container da tabela com bordas uniformes */
+    .fc .fc-daygrid-body {
+        border: 1px solid #dc3545 !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+    }
+    
+    /* Células dos dias com bordas uniformes */
     .fc .fc-daygrid-day {
-        min-height: 60px !important;
+        min-height: 42px !important;
+        height: 42px !important;
+        padding: 1px !important;
+        border-right: 1px solid #dc3545 !important;
+        border-bottom: 1px solid #dc3545 !important;
+        border-left: none !important;
+        border-top: none !important;
+    }
+    
+    /* Remove borda direita da última coluna */
+    .fc .fc-daygrid-day:nth-child(7n) {
+        border-right: none !important;
+    }
+    
+    /* Remove borda inferior da última linha */
+    .fc .fc-daygrid-day:nth-last-child(-n+7) {
+        border-bottom: none !important;
     }
     
     .fc .fc-daygrid-day-number {
-        font-size: 0.9em !important;
-        padding: 2px 4px !important;
+        font-size: 11px !important;
+        padding: 2px !important;
+        line-height: 1.1 !important;
+        font-weight: 500 !important;
     }
     
+    /* Cabeçalhos dos dias */
+    .fc .fc-col-header-cell {
+        padding: 4px 2px !important;
+        font-size: 9px !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        background: #f8f9fa !important;
+        border-right: 1px solid #dc3545 !important;
+        border-bottom: 2px solid #dc3545 !important;
+        border-left: none !important;
+        border-top: none !important;
+    }
+    
+    /* Remove borda direita do último cabeçalho */
+    .fc .fc-col-header-cell:last-child {
+        border-right: none !important;
+    }
+    
+    /* Container dos cabeçalhos */
+    .fc .fc-col-header {
+        border: 1px solid #dc3545 !important;
+        border-bottom: none !important;
+        border-radius: 8px 8px 0 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Eventos */
     .fc-event {
-        font-size: 0.7em !important;
-        padding: 2px 4px !important;
+        font-size: 8px !important;
+        padding: 1px 2px !important;
+        margin: 0px !important;
+        line-height: 1 !important;
+        min-height: auto !important;
+        border-radius: 2px !important;
     }
     
+    .fc-event-title {
+        font-size: 8px !important;
+        line-height: 1 !important;
+    }
+    
+    /* ==== SOLUÇÃO ULTRA-AGRESSIVA ==== */
+    
+    /* MÁXIMA ESPECIFICIDADE PARA CONTAINER PRINCIPAL */
+    body main #calendario.fc {
+        border: 3px solid #dc3545 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        background: white !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    body main #calendario {
+        border: 3px solid #dc3545 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        background: white !important;
+        padding: 0 !important;
+        margin: 5px auto !important;
+        box-sizing: border-box !important;
+        width: calc(100% - 10px) !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+    
+    /* Força largura total nos containers internos */
+    body main #calendario .fc {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    body main #calendario .fc-view-harness {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* NUCLEAR: Remove TODAS as bordas com máxima especificidade */
+    body main #calendario *,
+    body main #calendario * * ,
+    body main #calendario * * *,
+    body main #calendario * * * * {
+        border: 0px solid transparent !important;
+        border-width: 0 !important;
+        outline: none !important;
+    }
+    
+    /* Reaplica apenas separadores internos com especificidade máxima */
+    body main #calendario .fc .fc-daygrid-day {
+        border: 0px solid transparent !important;
+        border-right: 1px solid #f0f0f0 !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        border-left-width: 0 !important;
+        border-top-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    body main #calendario .fc .fc-col-header-cell {
+        border: 0px solid transparent !important;
+        border-right: 1px solid #e0e0e0 !important;
+        border-bottom: 2px solid #e0e0e0 !important;
+        border-left-width: 0 !important;
+        border-top-width: 0 !important;
+        background: #f8f9fa !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Remove bordas da última coluna com máxima especificidade */
+    body main #calendario .fc .fc-daygrid-day:nth-child(7n),
+    body main #calendario .fc .fc-col-header-cell:nth-child(7n),
+    body main #calendario .fc .fc-col-header-cell:last-child {
+        border-right: none !important;
+        border-right-width: 0 !important;
+    }
+    
+    /* Remove bordas da última linha */
+    body main #calendario .fc .fc-daygrid-day:nth-last-child(-n+7),
+    body main #calendario .fc .fc-daygrid-day:last-child {
+        border-bottom: none !important;
+        border-bottom-width: 0 !important;
+    }
+    
+    /* ESPECIFICIDADE NUCLEAR para containers */
+    body main #calendario .fc .fc-daygrid-body,
+    body main #calendario .fc .fc-col-header,
+    body main #calendario .fc .fc-view-harness,
+    body main #calendario .fc .fc-daygrid,
+    body main #calendario .fc table,
+    body main #calendario .fc tbody,
+    body main #calendario .fc thead,
+    body main #calendario .fc tr {
+        border: 0px solid transparent !important;
+        border-width: 0 !important;
+        border-collapse: separate !important;
+        outline: none !important;
+    }
+    }
     /* Modais otimizados para celular */
     .modal-content {
         width: 98%;

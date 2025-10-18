@@ -75,6 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+            
+            // Aplica correção mobile após mudança de view
+            applyMobileFix();
         },
         
         buttonText: {
@@ -98,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         nowIndicator: true,
         displayEventTime: true,
-        events: '/api/agendamentos',
+        events: window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? 
+            'http://localhost:5201/api/agendamentos' : '/api/agendamentos',
   
         eventDataTransform: function(eventData) {
             return {
@@ -116,11 +120,264 @@ document.addEventListener('DOMContentLoaded', function() {
 
         eventClick: function(info) {
             calendar.changeView('timeGridDay', info.event.start);
-        }
+        },
+        
     });
 
     calendar.render();
+    
+    // Fix mobile layout after render
+    fixMobileLayout();
+    
+    // Aplica bordas para mobile - ESTRATÉGIA ANTI-CACHE
+    if (window.innerWidth <= 480) {
+        applySimpleBorders(); // Imediatamente
+        setTimeout(applySimpleBorders, 50);
+        setTimeout(applySimpleBorders, 100);
+        setTimeout(applySimpleBorders, 300);
+        setTimeout(applySimpleBorders, 500);
+        setTimeout(applySimpleBorders, 800);
+        setTimeout(applySimpleBorders, 1000);
+        setTimeout(applySimpleBorders, 1500);
+        setTimeout(applySimpleBorders, 2000);
+        
+        // Aplica novamente a cada 3 segundos por 15 segundos
+        let attempts = 0;
+        const interval = setInterval(() => {
+            applySimpleBorders();
+            attempts++;
+            if (attempts >= 5) clearInterval(interval);
+        }, 3000);
+    }
 });
+
+// Função para corrigir layout mobile
+function fixMobileLayout() {
+    // Só aplicar em telas pequenas
+    if (window.innerWidth <= 480) {
+        setTimeout(() => {
+            const toolbar = document.querySelector('.fc-toolbar');
+            if (toolbar) {
+                console.log('Corrigindo layout mobile...');
+                
+                // Força estilo da toolbar
+                toolbar.style.cssText = `
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: center !important;
+                    gap: 8px !important;
+                    margin-bottom: 15px !important;
+                    padding: 8px !important;
+                    background: rgba(255,255,255,0.95) !important;
+                    border-radius: 8px !important;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+                `;
+                
+                // Reorganiza os chunks
+                const chunks = toolbar.querySelectorAll('.fc-toolbar-chunk');
+                if (chunks.length >= 2) {
+                    // Título primeiro (chunk do meio)
+                    if (chunks[1]) {
+                        chunks[1].style.order = '1';
+                        chunks[1].style.margin = '0';
+                    }
+                    
+                    // Navegação segundo (chunk da esquerda)
+                    if (chunks[0]) {
+                        chunks[0].style.order = '2';
+                        chunks[0].style.display = 'flex';
+                        chunks[0].style.gap = '4px';
+                        chunks[0].style.margin = '4px 0';
+                    }
+                    
+                    // Botões extras terceiro (chunk da direita)
+                    if (chunks[2]) {
+                        chunks[2].style.order = '3';
+                        chunks[2].style.display = 'flex';
+                        chunks[2].style.gap = '4px';
+                        chunks[2].style.margin = '4px 0';
+                    }
+                }
+                
+                // Ajusta todos os botões
+                const buttons = toolbar.querySelectorAll('.fc-button');
+                buttons.forEach(button => {
+                    button.style.cssText += `
+                        padding: 4px 8px !important;
+                        font-size: 10px !important;
+                        margin: 1px !important;
+                        min-width: 45px !important;
+                        height: 28px !important;
+                        line-height: 1.2 !important;
+                        white-space: nowrap !important;
+                        border-radius: 4px !important;
+                    `;
+                });
+                
+                // Ajusta título
+                const title = toolbar.querySelector('.fc-toolbar-title');
+                if (title) {
+                    title.style.cssText = `
+                        font-size: 1rem !important;
+                        margin: 0 !important;
+                        padding: 5px 10px !important;
+                        text-align: center !important;
+                        color: #2c3e50 !important;
+                        font-weight: 600 !important;
+                    `;
+                }
+                
+                // Aplica bordas simples
+                setTimeout(applySimpleBorders, 100);
+            }
+        }, 100);
+    }
+}
+
+// Função para corrigir bordas do calendário
+function fixCalendarBorders() {
+    setTimeout(() => {
+        console.log('Aplicando bordas uniformes...');
+        
+        // ESTRATÉGIA: Criar um container com borda única em volta de tudo
+        const calendarTable = document.querySelector('.fc-daygrid');
+        if (calendarTable && window.innerWidth <= 480) {
+            // Remove todas as bordas existentes primeiro
+            const allCells = document.querySelectorAll('.fc-daygrid-day, .fc-col-header-cell');
+            allCells.forEach(cell => {
+                cell.style.border = 'none !important';
+                cell.style.borderRight = '1px solid #ddd !important';
+                cell.style.borderBottom = '1px solid #ddd !important';
+            });
+            
+            // Remove borda direita das últimas colunas
+            const lastColCells = document.querySelectorAll('.fc-col-header-cell:nth-child(7n), .fc-daygrid-day:nth-child(7n)');
+            lastColCells.forEach(cell => {
+                cell.style.borderRight = 'none !important';
+            });
+            
+            // Aplica borda vermelha externa no container principal
+            const dayGrid = document.querySelector('.fc-daygrid');
+            if (dayGrid) {
+                dayGrid.style.cssText = `
+                    border: 2px solid #dc3545 !important;
+                    border-radius: 8px !important;
+                    overflow: hidden !important;
+                    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+                `;
+            }
+            
+            // Garante que o container da view também tenha a borda
+            const viewHarness = document.querySelector('.fc-view-harness');
+            if (viewHarness) {
+                viewHarness.style.cssText += `
+                    border: 2px solid #dc3545 !important;
+                    border-radius: 8px !important;
+                    overflow: hidden !important;
+                    background: white !important;
+                `;
+            }
+            
+            // Cabeçalhos com fundo diferenciado
+            const headerCells = document.querySelectorAll('.fc-col-header-cell');
+            headerCells.forEach(cell => {
+                cell.style.cssText += `
+                    background: #f8f9fa !important;
+                    font-weight: bold !important;
+                    border-bottom: 2px solid #ddd !important;
+                `;
+            });
+            
+            console.log('Bordas aplicadas!');
+        }
+    }, 150);
+}
+
+// Reaplica correções quando a view muda
+function applyMobileFix() {
+    if (window.innerWidth <= 480) {
+        fixMobileLayout();
+        setTimeout(applySimpleBorders, 100);
+    }
+}
+
+// Listener para redimensionamento da janela
+window.addEventListener('resize', () => {
+    applyMobileFix();
+});
+
+// Função ULTRA-AGRESSIVA para aplicar bordas (força em produção)
+function applySimpleBorders() {
+    if (window.innerWidth > 480) return;
+    
+    const calendario = document.getElementById('calendario');
+    if (calendario) {
+        // ESTRATÉGIA 1: Remove todos os estilos existentes e reaplica
+        calendario.removeAttribute('style');
+        
+        // ESTRATÉGIA 2: Cria um novo elemento de estilo inline com máxima prioridade
+        const forceStyle = `
+            border: 3px solid #dc3545 !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            background: white !important;
+            box-sizing: border-box !important;
+            width: calc(100% - 10px) !important;
+            margin: 5px auto !important;
+            padding: 0 !important;
+            display: block !important;
+        `;
+        calendario.setAttribute('style', forceStyle);
+        
+        // ESTRATÉGIA 3: Cria CSS dinâmico com timestamp para burlar cache
+        const timestamp = Date.now();
+        const styleId = `mobile-borders-${timestamp}`;
+        
+        // Remove estilos anteriores
+        const oldStyle = document.getElementById(styleId.replace(timestamp, ''));
+        if (oldStyle) oldStyle.remove();
+        
+        // Cria novo estilo
+        const dynamicStyle = document.createElement('style');
+        dynamicStyle.id = styleId;
+        dynamicStyle.textContent = `
+            @media (max-width: 480px) {
+                #calendario {
+                    border: 3px solid #dc3545 !important;
+                    border-radius: 10px !important;
+                    overflow: hidden !important;
+                    background: white !important;
+                    box-sizing: border-box !important;
+                    width: calc(100% - 10px) !important;
+                    margin: 5px auto !important;
+                    padding: 0 !important;
+                    display: block !important;
+                }
+                #calendario .fc,
+                #calendario .fc-view-harness {
+                    width: 100% !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    box-sizing: border-box !important;
+                }
+            }
+        `;
+        document.head.appendChild(dynamicStyle);
+        
+        // ESTRATÉGIA 4: Força propriedades nos containers internos
+        setTimeout(() => {
+            const fcContainer = calendario.querySelector('.fc');
+            if (fcContainer) {
+                fcContainer.style.cssText += 'width: 100% !important; margin: 0 !important; padding: 0 !important;';
+            }
+            
+            const viewHarness = calendario.querySelector('.fc-view-harness');
+            if (viewHarness) {
+                viewHarness.style.cssText += 'width: 100% !important; margin: 0 !important; padding: 0 !important;';
+            }
+        }, 50);
+    }
+}
 
 // Funções do modal
 function showModal() {

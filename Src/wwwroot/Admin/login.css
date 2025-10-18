@@ -191,156 +191,24 @@ body {
 }
 
 /* Responsividade */
-
-/* Tablets */
-@media (max-width: 768px) {
-    body {
-        padding: 15px;
-    }
-    
-    .login-container {
-        max-width: 90%;
-    }
-    
-    .login-header {
-        padding: 25px 20px;
-    }
-    
-    .login-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .login-form {
-        padding: 25px 20px;
-    }
-    
-    .form-group input {
-        padding: 10px 14px;
-        font-size: 15px;
-    }
-    
-    .login-btn {
-        padding: 12px 18px;
-        font-size: 15px;
-        min-height: 46px;
-    }
-}
-
-/* Celulares */
 @media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
     .login-container {
         max-width: 100%;
     }
     
-    .login-card {
-        border-radius: 12px;
-    }
-    
     .login-header {
-        padding: 20px 15px;
+        padding: 25px 15px;
     }
     
     .login-header h1 {
-        font-size: 1.4rem;
-        margin-bottom: 6px;
-    }
-    
-    .login-header p {
-        font-size: 0.85rem;
+        font-size: 1.5rem;
     }
     
     .login-form {
-        padding: 20px 15px;
-    }
-    
-    .form-group {
-        margin-bottom: 18px;
-    }
-    
-    .form-group label {
-        font-size: 14px;
-        margin-bottom: 6px;
-    }
-    
-    .form-group input {
-        padding: 12px 14px;
-        font-size: 16px; /* Mantém 16px para evitar zoom no iOS */
-        border-radius: 6px;
-    }
-    
-    .login-btn {
-        padding: 14px 16px;
-        font-size: 15px;
-        min-height: 48px;
-        border-radius: 6px;
-    }
-    
-    .error-message {
-        padding: 10px 14px;
-        font-size: 13px;
-        margin-top: 12px;
+        padding: 25px 15px;
     }
     
     .login-footer {
         padding: 15px;
-    }
-    
-    .login-footer a {
-        font-size: 14px;
-    }
-}
-
-/* Telas muito pequenas */
-@media (max-width: 320px) {
-    body {
-        padding: 8px;
-    }
-    
-    .login-header {
-        padding: 18px 12px;
-    }
-    
-    .login-header h1 {
-        font-size: 1.2rem;
-    }
-    
-    .login-form {
-        padding: 18px 12px;
-    }
-    
-    .form-group input {
-        padding: 10px 12px;
-        font-size: 16px;
-    }
-    
-    .login-btn {
-        padding: 12px 14px;
-        font-size: 14px;
-        min-height: 44px;
-    }
-    
-    .login-footer {
-        padding: 12px;
-    }
-}
-
-/* Melhorias para touch */
-@media (pointer: coarse) {
-    .form-group input {
-        min-height: 44px;
-    }
-    
-    .login-btn {
-        min-height: 48px;
-        min-width: 48px;
-    }
-    
-    .form-group label {
-        padding: 4px 0;
-        cursor: default;
     }
 }
