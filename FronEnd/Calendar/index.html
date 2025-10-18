@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda da Quadra</title>
-    <link rel="stylesheet" href="calendar.css?v=20251018210316">
+    <link rel="stylesheet" href="calendar.css?v=20251018191139">
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 </head>
@@ -26,9 +26,15 @@
     <!-- Modal de aviso -->
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="modal-title">Aviso</h3>
-            <p id="modal-message">Não é permitido agendar horários além da semana atual. Para horários muito no futuro, fale com o responsável.</p>
-            <button id="modal-close-btn">OK</button>
+            <h3 id="modal-title">📅 Agendamentos Bloqueados</h3>
+            <div id="modal-message">
+                <p><strong>Atenção:</strong> Agendamentos para a próxima semana são liberados apenas aos <strong>domingos</strong>!</p>
+                <p>🕒 <strong>Horário de liberação:</strong> Todo domingo às 00h</p>
+                <p>🎯 <strong>Dica:</strong> Volte amanhã (domingo) para agendar a semana seguinte.</p>
+                <hr style="margin: 15px 0; border: 1px solid #eee;">
+                <p style="font-size: 0.9em; color: #666;">Para horários mais distantes, entre em contato com o responsável.</p>
+            </div>
+            <button id="modal-close-btn">Entendi</button>
         </div>
     </div>
 
@@ -47,6 +53,40 @@
         </div>
     </div>
 
-    <script src="calendar.js?v=20251018210316"></script>
+    <!-- Modal de aviso para sábados -->
+    <div id="sabado-overlay" class="modal-overlay">
+        <div class="modal-content modal-sabado">
+            <div class="sabado-header">
+                <h3 id="sabado-title">⚠️ Atenção - Sábado!</h3>
+            </div>
+            <div id="sabado-message">
+                <div class="highlight-box">
+                    <p><strong>🚫 Sistema em manutenção:</strong> Por ser sábado, os agendamentos futuros <strong>não estão funcionando</strong>.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="emoji">📅</span>
+                        <div>
+                            <strong>Sistema normaliza:</strong><br>
+                            A partir de domingo
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="emoji">⏰</span>
+                        <div>
+                            <strong>Para agendar:</strong><br>
+                            Volte amanhã (domingo)
+                        </div>
+                    </div>
+                </div>
+                <p class="tip">💡 <strong>Informação:</strong> Aos sábados o sistema passa por atualizações para liberar os agendamentos da semana seguinte. A partir de domingo, você poderá agendar normalmente para os próximos 7 dias.</p>
+            </div>
+            <div class="sabado-buttons">
+                <button id="sabado-fechar-btn" class="btn-fechar-sabado">Entendi</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="calendar.js?v=20251018191139"></script>
 </body>
 </html>

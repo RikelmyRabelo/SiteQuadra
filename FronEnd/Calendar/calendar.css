@@ -177,7 +177,32 @@ header h1 {
     color: #333;
     font-size: 1.1em;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+/* Estilos específicos para mensagem de agendamentos bloqueados */
+.modal-content #modal-message {
+    text-align: left;
+}
+
+.modal-content #modal-message p:first-child {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #dc3545;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.modal-content #modal-message p {
+    margin-bottom: 12px;
+}
+
+.modal-content #modal-message hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #dc3545, transparent);
+    margin: 20px 0;
 }
 
 #modal-close-btn {
@@ -675,6 +700,164 @@ header h1 {
     .termos-buttons {
         flex-direction: column;
         gap: 8px;
+    }
+}
+
+/* ==== MODAL DE SÁBADO ==== */
+
+.modal-sabado {
+    max-width: 550px !important;
+    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,249,250,0.98) 100%) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 2px solid #dc3545 !important;
+    box-shadow: 0 20px 40px rgba(220, 53, 69, 0.2) !important;
+}
+
+.sabado-header {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    margin: -30px -40px 20px -40px;
+    padding: 20px 30px;
+    border-radius: 20px 20px 0 0;
+    text-align: center;
+}
+
+.sabado-header h3 {
+    color: white !important;
+    margin: 0 !important;
+    font-size: 1.6em !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+    font-weight: 700;
+}
+
+.highlight-box {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.highlight-box p {
+    margin: 0 !important;
+    color: #721c24 !important;
+    font-size: 1.2em !important;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(220, 53, 69, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.info-item .emoji {
+    font-size: 2em;
+    min-width: 50px;
+    text-align: center;
+}
+
+.info-item div {
+    flex: 1;
+}
+
+.info-item strong {
+    color: #dc3545;
+    font-size: 1em;
+}
+
+.tip {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    font-size: 0.95em !important;
+    color: #856404 !important;
+    line-height: 1.4 !important;
+}
+
+.sabado-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.btn-agendar-sabado {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    color: white !important;
+    border: 2px solid #28a745 !important;
+    border-radius: 12px !important;
+    padding: 15px 25px !important;
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    flex: 2;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+}
+
+.btn-agendar-sabado:hover {
+    background: linear-gradient(135deg, #218838 0%, #1c7430 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+}
+
+.btn-fechar-sabado {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    color: white !important;
+    border: 2px solid #6c757d !important;
+    border-radius: 12px !important;
+    padding: 15px 20px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    flex: 1;
+}
+
+.btn-fechar-sabado:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Responsividade para modal de sábado */
+@media (max-width: 768px) {
+    .modal-sabado {
+        max-width: 95% !important;
+        margin: 10px !important;
+    }
+    
+    .sabado-header {
+        margin: -20px -25px 15px -25px;
+        padding: 15px 20px;
+    }
+    
+    .sabado-header h3 {
+        font-size: 1.3em !important;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .sabado-buttons {
+        flex-direction: column;
+        gap: 10px;
     }
 }
 

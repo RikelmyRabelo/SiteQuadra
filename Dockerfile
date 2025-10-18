@@ -33,8 +33,8 @@ RUN mkdir -p /app/data /app/logs /app/Backups
 # Copia aplicação
 COPY --from=publish /app/publish .
 
-# Copia frontend
-COPY --from=build /src/Src/wwwroot ./wwwroot/
+# Copia frontend do diretório correto
+COPY --from=build /src/FronEnd ./wwwroot/
 
 # Health check específico para Railway
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \

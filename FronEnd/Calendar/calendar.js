@@ -1,20 +1,59 @@
 // Função utilitária para calcular período permitido para agendamentos
+
+// Função utilitária para calcular período permitido para agendamentos
 function calcularPeriodoPermitido() {
     const hoje = new Date();
+    const diaDaSemana = hoje.getDay(); // 0=Domingo, 6=Sábado
+    
+    console.log('🔍 DEBUG:');
+    console.log('  - Data atual:', hoje.toLocaleDateString('pt-BR'));
+    console.log('  - Dia da semana:', diaDaSemana, '(0=Dom, 6=Sáb)');
+    
+    // Data de hoje sem horário
     const hojeSemHoras = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
     
     let ultimoDiaPermitido;
-    if (hoje.getDay() === 6) { // Se hoje é sábado (6)
-        // Permite até o sábado seguinte (próximos 7 dias)
+    
+    if (diaDaSemana === 6) {
+        // REGRA ESPECIAL PARA SÁBADO: Permite agendar até o próximo sábado
         ultimoDiaPermitido = new Date(hojeSemHoras);
         ultimoDiaPermitido.setDate(hojeSemHoras.getDate() + 7);
+        console.log('🎯 É SÁBADO! Liberando até próximo sábado:', ultimoDiaPermitido.toLocaleDateString('pt-BR'));
     } else {
-        // Regra normal: até o final da semana atual
+        // Regra normal: até o sábado desta semana
         ultimoDiaPermitido = new Date(hojeSemHoras);
-        ultimoDiaPermitido.setDate(hojeSemHoras.getDate() + (6 - hojeSemHoras.getDay()));
+        const diasRestantesNaSemana = 6 - diaDaSemana;
+        ultimoDiaPermitido.setDate(hojeSemHoras.getDate() + diasRestantesNaSemana);
+        console.log('📅 Dia normal. Permitindo até sábado desta semana:', ultimoDiaPermitido.toLocaleDateString('pt-BR'));
     }
     
+    console.log('  - Período: de', hojeSemHoras.toLocaleDateString('pt-BR'), 'até', ultimoDiaPermitido.toLocaleDateString('pt-BR'));
+    
     return { hojeSemHoras, ultimoDiaPermitido };
+}
+
+// Função para verificar e mostrar modal de sábado
+function verificarESexibirModalSabado() {
+    const hoje = new Date();
+    const diaDaSemana = hoje.getDay(); // 0=Domingo, 6=Sábado
+    
+    if (diaDaSemana === 6) { // Se hoje é sábado
+        // Espera um pouco para o DOM carregar completamente
+        setTimeout(() => {
+            const sabadoModal = document.getElementById('sabado-overlay');
+            if (sabadoModal) {
+                sabadoModal.style.display = 'flex';
+            }
+        }, 1500); // 1.5 segundos após carregar a página
+    }
+}
+
+// Funções do modal de sábado
+function fecharModalSabado() {
+    const sabadoModal = document.getElementById('sabado-overlay');
+    if (sabadoModal) {
+        sabadoModal.style.display = 'none';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -50,10 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (calendar.view.type === 'dayGridMonth') {
                         showTermosModal('../Booking/booking.html');
                     } else if (calendar.view.type === 'timeGridDay') {
+                        console.log('🔍 TENTATIVA DE AGENDAMENTO:');
+                        console.log('  - Data da view:', dataAtualDaViewSemHoras.toDateString());
+                        console.log('  - Hoje:', hojeSemHoras.toDateString());
+                        console.log('  - Último dia permitido:', ultimoDiaPermitido.toDateString());
+                        console.log('  - Está dentro do período?', dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido);
+                        
                         if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido) {
                             const dataFormatada = dataAtualDaViewSemHoras.toISOString().split('T')[0];
+                            console.log('✅ PERMITIDO - Redirecionando para agendamento');
                             showTermosModal(`../Booking/booking.html?data=${dataFormatada}`);
                         } else {
+                            console.log('❌ BLOQUEADO - Mostrando modal de erro');
                             showModal();
                         }
                     }
@@ -82,10 +129,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dataView = info.view.currentStart;
                     const dataAtualDaViewSemHoras = new Date(dataView.getFullYear(), dataView.getMonth(), dataView.getDate());
 
+                    console.log('🔍 ATUALIZAÇÃO DO BOTÃO:');
+                    console.log('  - Data da view:', dataAtualDaViewSemHoras.toDateString());
+                    console.log('  - Hoje:', hojeSemHoras.toDateString());
+                    console.log('  - Último dia permitido:', ultimoDiaPermitido.toDateString());
+                    console.log('  - Botão deve estar habilitado?', dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido);
+                    
                     if (dataAtualDaViewSemHoras >= hojeSemHoras && dataAtualDaViewSemHoras <= ultimoDiaPermitido) {
                         agendarButton.classList.remove('fc-button-disabled');
+                        console.log('✅ BOTÃO HABILITADO');
                     } else {
                         agendarButton.classList.add('fc-button-disabled');
+                        console.log('❌ BOTÃO DESABILITADO');
                     }
                 }
             }
@@ -129,6 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         dateClick: function(info) {
+            console.log('💆 CLIQUE NO DIA:', info.dateStr);
+            const { hojeSemHoras, ultimoDiaPermitido } = calcularPeriodoPermitido();
+            const dataClicada = new Date(info.dateStr + 'T00:00:00');
+            console.log('  - Data clicada:', dataClicada.toDateString());
+            console.log('  - Permitido agendar?', dataClicada >= hojeSemHoras && dataClicada <= ultimoDiaPermitido);
             calendar.changeView('timeGridDay', info.dateStr);
         },
 
@@ -142,6 +202,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Fix mobile layout after render
     fixMobileLayout();
+    
+    // Verificar se é sábado e mostrar modal
+    verificarESexibirModalSabado();
     
     // Aplica bordas para mobile - ESTRATÉGIA ANTI-CACHE
     if (window.innerWidth <= 480) {
@@ -464,6 +527,22 @@ document.addEventListener('DOMContentLoaded', function() {
         termosModal.addEventListener('click', function(event) {
             if (event.target === termosModal) {
                 hideTermosModal();
+            }
+        });
+    }
+    
+    // Event listeners para modal de sábado
+    const sabadoFecharBtn = document.getElementById('sabado-fechar-btn');
+    const sabadoModal = document.getElementById('sabado-overlay');
+    
+    if (sabadoFecharBtn) {
+        sabadoFecharBtn.addEventListener('click', fecharModalSabado);
+    }
+    
+    if (sabadoModal) {
+        sabadoModal.addEventListener('click', function(event) {
+            if (event.target === sabadoModal) {
+                fecharModalSabado();
             }
         });
     }
