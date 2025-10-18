@@ -310,6 +310,11 @@ header h1 {
         margin-bottom: 10px;
     }
     
+    .nav-links {
+        gap: 8px;
+        justify-content: center;
+    }
+    
     .admin-access {
         font-size: 0.8em;
         padding: 6px 12px;
@@ -360,6 +365,19 @@ header h1 {
     header h1 {
         font-size: 1.6em;
         margin-bottom: 8px;
+    }
+    
+    /* Navegação mobile centralizada */
+    .nav-links {
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .admin-access {
+        font-size: 0.75em;
+        padding: 6px 10px;
+        min-width: 120px;
+        text-align: center;
     }
     
     /* Container principal */
